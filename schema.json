@@ -1,0 +1,21 @@
+{
+  "TableName" : "Product",
+  "Columns": [
+    {
+      "Name": "Id",
+      "Type": "int",
+      "IsPrimaryKey": true,
+      "IsIdentity": true
+    },
+    {
+      "Name": "Name",
+      "Type": "string",
+      "Required": true,
+      "MaxLength": 100
+    },
+    {
+      "Name": "Price",
+      "Type": "decimal"
+    }
+  ]
+}

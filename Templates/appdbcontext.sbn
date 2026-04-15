@@ -1,0 +1,59 @@
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace <<Your Namespace>>.Data
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
+        {
+        }
+
+        // 🔹 DbSets
+
+        public DbSet<{{table_name}}> {{table_name}}s { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // 🔹 Apply configurations per entity
+            modelBuilder.Entity<{{table_name}}>(entity =>
+            {
+                entity.ToTable("{{table_name}}");
+
+                {{ for col in columns -}}
+                
+                // Column: {{col.name}}
+                entity.Property(e => e.{{col.name}})
+                    .HasColumnName("{{col.name}}")
+                    {{ if col.type == "string" -}}
+                    .HasMaxLength({{col.maxlength ?? 100}})
+                    {{ end -}}
+                    {{ if col.required == true -}}
+                    .IsRequired()
+                    {{ end -}};
+                
+                {{ end -}}
+
+                // 🔹 Primary Key
+                {{ for col in columns -}}
+                {{ if col.isprimarykey == true -}}
+                entity.HasKey(e => e.{{col.name}});
+                {{ end -}}
+                {{ end -}}
+
+                // 🔹 Identity column
+                {{ for col in columns -}}
+                {{ if col.isidentity == true -}}
+                entity.Property(e => e.{{col.name}})
+                      .ValueGeneratedOnAdd();
+                {{ end -}}
+                {{ end -}}
+
+            });
+
+        }
+    }
+}

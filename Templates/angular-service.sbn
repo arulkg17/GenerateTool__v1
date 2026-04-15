@@ -1,0 +1,8 @@
+﻿export class {{table_name}}Service {
+	apiurl = "api/{{table_name}}";
+
+	getAll()
+	{
+		return this.http.gey(this.apiurl);
+	}
+}
