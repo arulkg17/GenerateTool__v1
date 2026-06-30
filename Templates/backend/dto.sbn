@@ -1,0 +1,6 @@
+public class {{table_name}}Dto
+{
+{{ for col in columns }}
+    public {{col.type}} {{col.name}} { get; set; }
+{{ end }}
+}

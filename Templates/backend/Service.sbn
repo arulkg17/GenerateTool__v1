@@ -1,0 +1,53 @@
+using Microsoft.EntityFrameworkCore;
+using <Your Namespace>.Contracts;
+using <Your Namespace>.DTOs;
+using <Your Namespace>.Entities;
+using AutoMapper;
+
+namespace <Your Namespace>.Services;
+
+public class {{table_name}}Service : I{{table_name}}Service
+{
+    private readonly I{{table_name}}Repository _repository;
+    private readonly IMapper _mapper;
+
+    public {{table_name}}Service(I{{table_name}}Repository repository, IMapper mapper)
+    {
+        _repository = repository;
+        _mapper = mapper;
+    }
+
+    public async Task<IEnumerable<{{table_name}}Dto>> GetAllAsync()
+    {
+        var entities = await _repository.GetAllAsync();
+        return _mapper.Map<IEnumerable<{{table_name}}Dto>>(entities);
+    }
+
+    public async Task<{{table_name}}Dto?> GetByIdAsync(int id)
+    {
+        var entity = await _repository.GetByIdAsync(id);
+        if (entity == null) return null;
+
+        return _mapper.Map<{{table_name}}Dto>(entity);
+    }
+
+    public async Task<{{table_name}}Dto> AddAsync({{table_name}}Dto dto)
+    {
+        var entity = _mapper.Map<{{table_name}}Entity>(dto);
+
+        var created = await _repository.AddAsync(entity);
+
+        return _mapper.Map<{{table_name}}Dto>(created);
+    }
+
+    public async Task<bool> UpdateAsync({{table_name}}Dto dto)
+    {
+        var entity = _mapper.Map<{{table_name}}Entity>(dto);
+        return await _repository.UpdateAsync(entity);
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        return await _repository.DeleteAsync(id);
+    }
+}

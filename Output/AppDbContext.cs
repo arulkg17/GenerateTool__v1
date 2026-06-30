@@ -10,9 +10,7 @@ namespace <<Your Namespace>>.Data
         }
 
         // 🔹 DbSets
-
         public DbSet<Product> Products { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,30 +21,45 @@ namespace <<Your Namespace>>.Data
             {
                 entity.ToTable("Product");
 
-                // Column: Id
-                                entity.Property(e => e.Id)
-                                    .HasColumnName("Id")
-                                    ;
-                                
-                                // Column: Name
-                                entity.Property(e => e.Name)
-                                    .HasColumnName("Name")
-                                    .HasMaxLength(100)
-                                        .IsRequired()
-                    ;
-                                
-                                // Column: Price
-                                entity.Property(e => e.Price)
-                                    .HasColumnName("Price")
-                                    ;
-                                
-                                // 🔹 Primary Key
-                entity.HasKey(e => e.Id);
-                // 🔹 Identity column
-                entity.Property(e => e.Id)
-                      .ValueGeneratedOnAdd();
-                });
 
+                // Column: Id
+                entity.Property(e => e.Id)
+                    .HasColumnName("Id");
+
+                // Column: Name
+                entity.Property(e => e.Name)
+                    .HasColumnName("Name")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                // Column: Price
+                entity.Property(e => e.Price)
+                    .HasColumnName("Price");
+
+
+                // 🔹 Primary Key
+
+
+                entity.HasKey(e => e.Id);
+
+
+
+
+
+
+
+                // 🔹 Identity column
+
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+
+
+
+
+
+
+            });
         }
     }
 }

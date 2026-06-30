@@ -1,0 +1,11 @@
+using <Your Namespoace>.Entities;
+
+namespace <Your Namespace>.Contracts;
+public interface I{{table_name}}Repository
+{
+	Task<IEnumerable<{{table_name}}Entity>> GetAllAsync();
+	Task<{{table_name}}Entity> GetByIdAsync(int id);
+	Task<{{table_name}}Entity> AddAsync({{table_name}}Entity entity);
+	Task<bool> UpdateAsync({{table_name}}Entity entity);
+	Task<bool> DeleteAsync(int id);
+}

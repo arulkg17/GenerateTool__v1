@@ -1,0 +1,29 @@
+{
+  "TableName": "Category",
+  "apiUrl": "/api/category",
+  "Columns": [
+    {
+      "name": "Id",
+      "type": "number",
+      "isPrimary": true
+    },
+    {
+      "name": "Code",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "Name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "Description",
+      "type": "string"
+    },
+    {
+      "name": "IsActive",
+      "type": "boolean"
+    }
+  ]
+}

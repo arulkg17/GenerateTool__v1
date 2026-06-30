@@ -1,0 +1,25 @@
+# Visual Studio
+.vs/
+
+# Build output
+bin/
+obj/
+
+# User files
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Node
+node_modules/
+
+# Packages
+packages/

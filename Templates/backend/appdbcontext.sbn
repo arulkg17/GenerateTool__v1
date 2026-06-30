@@ -10,9 +10,7 @@ namespace <<Your Namespace>>.Data
         }
 
         // 🔹 DbSets
-
         public DbSet<{{table_name}}> {{table_name}}s { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,37 +21,29 @@ namespace <<Your Namespace>>.Data
             {
                 entity.ToTable("{{table_name}}");
 
-                {{ for col in columns -}}
-                
+{{ for col in columns }}
                 // Column: {{col.name}}
                 entity.Property(e => e.{{col.name}})
-                    .HasColumnName("{{col.name}}")
-                    {{ if col.type == "string" -}}
-                    .HasMaxLength({{col.maxlength ?? 100}})
-                    {{ end -}}
-                    {{ if col.required == true -}}
-                    .IsRequired()
-                    {{ end -}};
-                
-                {{ end -}}
+                    .HasColumnName("{{col.name}}"){{ if col.type == "string" }}
+                    .HasMaxLength({{col.maxlength ?? 100}}){{ end }}{{ if col.required == true }}
+                    .IsRequired(){{ end }};
+{{ end }}
 
                 // 🔹 Primary Key
-                {{ for col in columns -}}
-                {{ if col.isprimarykey == true -}}
+{{ for col in columns }}
+{{ if col.isprimarykey == true }}
                 entity.HasKey(e => e.{{col.name}});
-                {{ end -}}
-                {{ end -}}
+{{ end }}
+{{ end }}
 
                 // 🔹 Identity column
-                {{ for col in columns -}}
-                {{ if col.isidentity == true -}}
+{{ for col in columns }}
+{{ if col.isidentity == true }}
                 entity.Property(e => e.{{col.name}})
-                      .ValueGeneratedOnAdd();
-                {{ end -}}
-                {{ end -}}
-
+                    .ValueGeneratedOnAdd();
+{{ end }}
+{{ end }}
             });
-
         }
     }
 }

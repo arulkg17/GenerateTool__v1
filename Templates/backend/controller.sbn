@@ -1,0 +1,228 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using <Your Namespace>.Contracts;
+using <Your Namespace>.DTOs;
+using <Your Namespace>.Models;
+
+namespace <Your Namespace>.Controllers;
+
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiController]
+[Authorize]
+[ApiVersion("1.0")]
+public class {{table_name}}Controller : ControllerBase
+{
+    private readonly I{{table_name}}Service _service;
+    private readonly ILogger<{{table_name}}Controller> _logger;
+
+    public {{table_name}}Controller(
+        I{{table_name}}Service service,
+        ILogger<{{table_name}}Controller> logger)
+    {
+        _service = service;
+        _logger = logger;
+    }
+
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAll()
+    {
+        try
+        {
+            _logger.LogInformation("GetAll {{table_name}} started");
+
+            var data = await _service.GetAllAsync();
+
+            _logger.LogInformation("GetAll {{table_name}} completed successfully");
+
+            return Ok(new ApiResponse<IEnumerable<{{table_name}}Dto>>
+            {
+                Success = true,
+                Message = "{{table_name}} retrieved successfully",
+                Data = data
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred in GetAll {{table_name}}");
+
+            return StatusCode(500, new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Error retrieving {{table_name}}",
+                Error = new ApiError
+                {
+                    Code = "500",
+                    Details = ex.Message
+                }
+            });
+        }
+    }
+
+    [HttpGet("GetById/{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        try
+        {
+            _logger.LogInformation("GetById {{table_name}} started for Id: {Id}", id);
+
+            var item = await _service.GetByIdAsync(id);
+
+            if (item == null)
+            {
+                _logger.LogWarning("{{table_name}} not found for Id: {Id}", id);
+
+                return NotFound(new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "{{table_name}} not found"
+                });
+            }
+
+            return Ok(new ApiResponse<{{table_name}}Dto>
+            {
+                Success = true,
+                Message = "{{table_name}} retrieved successfully",
+                Data = item
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetById {{table_name}} for Id: {Id}", id);
+
+            return StatusCode(500, new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Error retrieving {{table_name}}",
+                Error = new ApiError
+                {
+                    Code = "500",
+                    Details = ex.Message
+                }
+            });
+        }
+    }
+
+    [HttpPost("Create")]
+    public async Task<IActionResult> Create({{table_name}}Dto dto)
+    {
+        try
+        {
+            _logger.LogInformation("Create {{table_name}} started");
+
+            var result = await _service.AddAsync(dto);
+
+            _logger.LogInformation("Create {{table_name}} completed");
+
+            return Ok(new ApiResponse<{{table_name}}Dto>
+            {
+                Success = true,
+                Message = "{{table_name}} created successfully",
+                Data = result
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in Create {{table_name}}");
+
+            return StatusCode(500, new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Error creating {{table_name}}",
+                Error = new ApiError
+                {
+                    Code = "500",
+                    Details = ex.Message
+                }
+            });
+        }
+    }
+
+    [HttpPut("Update/{id}")]
+    public async Task<IActionResult> Update({{table_name}}Dto dto, int id)
+    {
+        try
+        {
+            _logger.LogInformation("Update {{table_name}} started for Id: {Id}", id);
+
+            dto.Id = id;
+
+            var updated = await _service.UpdateAsync(dto);
+
+            if (!updated)
+            {
+                _logger.LogWarning("Update failed - {{table_name}} not found for Id: {Id}", id);
+
+                return NotFound(new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "{{table_name}} not found"
+                });
+            }
+
+            return Ok(new ApiResponse<string>
+            {
+                Success = true,
+                Message = "{{table_name}} updated successfully"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in Update {{table_name}} for Id: {Id}", id);
+
+            return StatusCode(500, new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Error updating {{table_name}}",
+                Error = new ApiError
+                {
+                    Code = "500",
+                    Details = ex.Message
+                }
+            });
+        }
+    }
+
+    [HttpDelete("Delete/{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            _logger.LogInformation("Delete {{table_name}} started for Id: {Id}", id);
+
+            var deleted = await _service.DeleteAsync(id);
+
+            if (!deleted)
+            {
+                _logger.LogWarning("Delete failed - {{table_name}} not found for Id: {Id}", id);
+
+                return NotFound(new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "{{table_name}} not found"
+                });
+            }
+
+            return Ok(new ApiResponse<string>
+            {
+                Success = true,
+                Message = "{{table_name}} deleted successfully"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in Delete {{table_name}} for Id: {Id}", id);
+
+            return StatusCode(500, new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Error deleting {{table_name}}",
+                Error = new ApiError
+                {
+                    Code = "500",
+                    Details = ex.Message
+                }
+            });
+        }
+    }
+}

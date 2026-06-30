@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Templates\model.sbn">
+    <Content Include="Templates\backend\model.sbn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Services\" />
-    <Folder Include="Templates\backend\" />
     <Folder Include="Templates\angular\" />
     <Folder Include="Templates\react\" />
   </ItemGroup>
