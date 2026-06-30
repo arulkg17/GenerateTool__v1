@@ -38,7 +38,7 @@ var tmplMapperPath = Path.Combine(rootPath, templateBackendPathSbn, "mapper.sbn"
 //  Template path Angular
 var tmplAngularServicePath = Path.Combine(rootPath, "Templates", "angular-service.sbn");
 
-var json = File.ReadAllText(Path.Combine(rootPath,"schema.json"));
+var json = File.ReadAllText(Path.Combine(rootPath,"product.json"));
 var schema = JsonSerializer.Deserialize<TableSchema>(json);
 
 
