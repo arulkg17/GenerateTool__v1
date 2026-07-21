@@ -5,7 +5,7 @@ namespace GeneratorTool.Models;
 
 public class TableSchema
 {
-    [JsonPropertyName("TableName")]
+    [JsonPropertyName("tablename")]
     public string TableName { get; set; } = string.Empty;
 
     [JsonPropertyName("apiUrl")]

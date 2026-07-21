@@ -1,0 +1,214 @@
+-- =============================================
+-- Create Table : {{tablename}}
+-- =============================================
+
+CREATE TABLE [dbo].[{{tablename}}]
+(
+    {{~ for col in columns ~}}
+    [{{col.name}}] {{col.sqltype}}{{ if col.isidentity }} IDENTITY(1,1){{ end }}{{ if col.required }} NOT NULL{{ else }} NULL{{ end }},
+    {{~ end ~}}
+
+    CONSTRAINT PK_{{tablename}}
+        PRIMARY KEY (
+        {{~ for col in columns ~}}
+        {{~ if col.isprimary ~}}
+            {{col.name}}
+        {{~ end ~}}
+        {{~ end }}
+        )
+);
+
+GO
+
+
+-- =============================================
+-- INSERT
+-- =============================================
+
+CREATE PROCEDURE [dbo].[sp_{{tablename}}_Insert]
+
+(
+{{~ for col in columns ~}}
+{{~ if !col.isidentity ~}}
+    @{{col.name}} {{col.sqltype}},
+{{~ end ~}}
+{{~ end }}
+)
+
+AS
+BEGIN
+
+    SET NOCOUNT ON;
+
+    INSERT INTO [dbo].[{{tablename}}]
+    (
+{{~ for col in columns ~}}
+{{~ if !col.isidentity ~}}
+        [{{col.name}}],
+{{~ end ~}}
+{{~ end }}
+    )
+
+    VALUES
+    (
+{{~ for col in columns ~}}
+{{~ if !col.isidentity ~}}
+        @{{col.name}},
+{{~ end ~}}
+{{~ end }}
+    );
+
+    SELECT SCOPE_IDENTITY() AS Id;
+
+END
+
+GO
+
+
+-- =============================================
+-- UPDATE
+-- =============================================
+
+CREATE PROCEDURE [dbo].[sp_{{tablename}}_Update]
+
+(
+{{~ for col in columns ~}}
+    @{{col.name}} {{col.sqltype}},
+{{~ end }}
+)
+
+AS
+BEGIN
+
+    SET NOCOUNT ON;
+
+    UPDATE [dbo].[{{tablename}}]
+
+    SET
+
+{{~ for col in columns ~}}
+{{~ if !col.isprimary ~}}
+        [{{col.name}}] = @{{col.name}},
+{{~ end ~}}
+{{~ end }}
+
+    WHERE Id=@Id;
+
+    SELECT @@ROWCOUNT AS UpdatedRows;
+
+END
+
+GO
+
+
+-- =============================================
+-- DELETE
+-- =============================================
+
+CREATE PROCEDURE [dbo].[sp_{{tablename}}_Delete]
+
+(
+    @Id INT
+)
+
+AS
+BEGIN
+
+    SET NOCOUNT ON;
+
+    DELETE FROM [dbo].[{{tablename}}]
+
+    WHERE Id=@Id;
+
+    SELECT @@ROWCOUNT AS DeletedRows;
+
+END
+
+GO
+
+
+-- =============================================
+-- GET BY ID
+-- =============================================
+
+CREATE PROCEDURE [dbo].[sp_{{tablename}}_GetById]
+
+(
+    @Id INT
+)
+
+AS
+BEGIN
+
+    SET NOCOUNT ON;
+
+    SELECT *
+
+    FROM [dbo].[{{tablename}}]
+
+    WHERE Id=@Id;
+
+END
+
+GO
+
+
+-- =============================================
+-- GET ALL
+-- =============================================
+
+CREATE PROCEDURE [dbo].[sp_{{tablename}}_GetAll]
+
+AS
+BEGIN
+
+    SET NOCOUNT ON;
+
+    SELECT *
+
+    FROM [dbo].[{{tablename}}]
+
+    ORDER BY Id DESC;
+
+END
+
+GO
+
+
+-- =============================================
+-- GET ALL PAGED
+-- =============================================
+
+CREATE PROCEDURE [dbo].[sp_{{tablename}}_GetAllPaged]
+
+(
+    @PageNumber INT = 1,
+    @PageSize INT = 10
+)
+
+AS
+BEGIN
+
+    SET NOCOUNT ON;
+
+    DECLARE @Offset INT;
+
+    SET @Offset = (@PageNumber-1) * @PageSize;
+
+    SELECT *
+
+    FROM [dbo].[{{tablename}}]
+
+    ORDER BY Id DESC
+
+    OFFSET @Offset ROWS
+
+    FETCH NEXT @PageSize ROWS ONLY;
+
+    SELECT COUNT(*) AS TotalRecords
+
+    FROM [dbo].[{{tablename}}];
+
+END
+
+GO

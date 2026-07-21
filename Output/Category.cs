@@ -11,4 +11,12 @@ public class
 		
 			public boolean IsActive {get; set;}
 		
+			public string CreatedBy {get; set;}
+		
+			public datetime CreatedDate {get; set;}
+		
+			public string UpdatedBy {get; set;}
+		
+			public datetime UpdatedDate {get; set;}
+		
 }

@@ -8,4 +8,5 @@ public interface ICategoryService
     Task<CategoryDto> AddAsync(Dto dto);
     Task<bool> UpdateAsync(CategoryDto dto);
     Task<bool> DeleteAsync(int id);
+    Task<PagedResultDto<CategoryDto>> GetAllPagedAsync(PagedRequestDto request);
 }

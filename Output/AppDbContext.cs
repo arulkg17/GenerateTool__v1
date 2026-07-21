@@ -10,7 +10,7 @@ namespace InvoiceManagement.Data
         }
 
         // 🔹 DbSets
-        public DbSet<Category> Category { get; set; }
+        public DbSet<Category> s { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,12 +24,13 @@ namespace InvoiceManagement.Data
 
                 // Column: Id
                 entity.Property(e => e.Id)
-                    .HasColumnName("Id");
+                    .HasColumnName("Id")
+                    .IsRequired();
 
                 // Column: Code
                 entity.Property(e => e.Code)
                     .HasColumnName("Code")
-                    .HasMaxLength(100)
+                    .HasMaxLength(50)
                     .IsRequired();
 
                 // Column: Name
@@ -41,11 +42,32 @@ namespace InvoiceManagement.Data
                 // Column: Description
                 entity.Property(e => e.Description)
                     .HasColumnName("Description")
-                    .HasMaxLength(100);
+                    .HasMaxLength(500);
 
                 // Column: IsActive
                 entity.Property(e => e.IsActive)
-                    .HasColumnName("IsActive");
+                    .HasColumnName("IsActive")
+                    .IsRequired();
+
+                // Column: CreatedBy
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("CreatedBy")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                // Column: CreatedDate
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("CreatedDate");
+
+                // Column: UpdatedBy
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("UpdatedBy")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                // Column: UpdatedDate
+                entity.Property(e => e.UpdatedDate)
+                    .HasColumnName("UpdatedDate");
 
 
                 // 🔹 Primary Key
@@ -61,7 +83,26 @@ namespace InvoiceManagement.Data
 
 
 
+
+
+
+
+
+
+
+
                 // 🔹 Identity column
+
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+
+
+
+
+
+
+
 
 
 

@@ -40,14 +40,31 @@ public class {{tablename}}Service : I{{tablename}}Service
         return _mapper.Map<{{tablename}}Dto>(created);
     }
 
-    public async Task<bool> UpdateAsync({{tablename}}Dto dto)
-    {
-        var entity = _mapper.Map<{{tablename}}Entity>(dto);
-        return await _repository.UpdateAsync(entity);
-    }
+   public async Task<bool> UpdateAsync({{tablename}}Dto dto)
+   {
+        var entity = 
+           _mapper.Map<{{tablename}}Entity>(dto);
 
-    public async Task<bool> DeleteAsync(int id)
-    {
-        return await _repository.DeleteAsync(id);
-    }
+        return await _repository.UpdateAsync(entity);
+   }
+
+   public async Task<bool> DeleteAsync(int id)
+   {
+     return await _repository.DeleteAsync(id);
+   }
+   public async Task<PagedResultDto<{{tablename}}Dto>>  GetAllPagedAsync(PagedRequestDto request)
+   {
+            var result =  await _repository.GetAllPagedAsync(request);
+
+            return new PagedResultDto<{{tablename}}Dto>
+            {
+
+            Items =  _mapper.Map<IEnumerable<{{tablename}}Dto>>(result.Items),
+            TotalRecords=result.TotalRecords,
+            PageNumber=result.PageNumber,
+            PageSize=result.PageSize
+            };
+
+   }
+
 }

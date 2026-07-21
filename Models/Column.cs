@@ -1,127 +1,69 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace GeneratorTool.Models
+namespace GeneratorTool.Models;
+
+public class Column
 {
-    public class Column
-    {
-        [JsonPropertyName("name")]
-        public string Name { get; set; } = string.Empty;
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("type")]
-        public string Type { get; set; } = string.Empty;
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = string.Empty;
 
-        [JsonPropertyName("required")]
-        public bool Required { get; set; }
+    [JsonPropertyName("sqlType")]
+    public string SqlType { get; set; } = string.Empty;
 
-        [JsonPropertyName("isPrimary")]
-        public bool IsPrimary { get; set; }
+    [JsonPropertyName("required")]
+    public bool Required { get; set; }
 
-        public string CSharpType
+    [JsonPropertyName("isPrimary")]
+    public bool IsPrimary { get; set; }
+
+    [JsonPropertyName("isIdentity")]
+    public bool IsIdentity { get; set; }
+
+    [JsonPropertyName("searchable")]
+    public bool Searchable { get; set; }
+
+    [JsonPropertyName("maxlength")]
+    public int? MaxLength { get; set; }
+
+    [JsonPropertyName("defaultValue")]
+    public object? DefaultValue { get; set; }
+
+    public string CSharpType =>
+        Type.ToLower() switch
         {
-            get
-            {
-                return Type.ToLower() switch
-                {
-                    "number" => "int",
-                    "int" => "int",
-                    "long" => "long",
-                    "decimal" => "decimal",
-                    "double" => "double",
-                    "float" => "float",
-                    "string" => "string",
-                    "boolean" => "bool",
-                    "bool" => "bool",
-                    "date" => "DateTime",
-                    "datetime" => "DateTime",
-                    "guid" => "Guid",
-                    _ => "string"
-                };
-            }
-        }
+            "number" => "int",
+            "int" => "int",
+            "long" => "long",
+            "decimal" => "decimal",
+            "double" => "double",
+            "float" => "float",
+            "string" => "string",
+            "boolean" => "bool",
+            "bool" => "bool",
+            "date" => "DateTime",
+            "datetime" => "DateTime",
+            "guid" => "Guid",
+            _ => "string"
+        };
 
-        public string SqlType
+    public string TypeScriptType =>
+        Type.ToLower() switch
         {
-            get
-            {
-                return Type.ToLower() switch
-                {
-                    "number" => "INT",
-                    "int" => "INT",
-                    "long" => "BIGINT",
-                    "decimal" => "DECIMAL(18,2)",
-                    "double" => "FLOAT",
-                    "float" => "REAL",
-                    "string" => "NVARCHAR(MAX)",
-                    "boolean" => "BIT",
-                    "bool" => "BIT",
-                    "date" => "DATE",
-                    "datetime" => "DATETIME",
-                    "guid" => "UNIQUEIDENTIFIER",
-                    _ => "NVARCHAR(MAX)"
-                };
-            }
-        }
-
-        public string TypeScriptType
-        {
-            get
-            {
-                return Type.ToLower() switch
-                {
-                    "number" => "number",
-                    "int" => "number",
-                    "long" => "number",
-                    "decimal" => "number",
-                    "double" => "number",
-                    "float" => "number",
-                    "string" => "string",
-                    "boolean" => "boolean",
-                    "bool" => "boolean",
-                    "date" => "Date",
-                    "datetime" => "Date",
-                    "guid" => "string",
-                    _ => "string"
-                };
-            }
-        }
-
-        public string DefaultValue
-        {
-            get
-            {
-                return Type.ToLower() switch
-                {
-                    "number" => "0",
-                    "int" => "0",
-                    "long" => "0",
-                    "decimal" => "0",
-                    "double" => "0",
-                    "float" => "0",
-                    "string" => "\"\"",
-                    "boolean" => "false",
-                    "bool" => "false",
-                    "date" => "DateTime.Now",
-                    "datetime" => "DateTime.Now",
-                    "guid" => "Guid.NewGuid()",
-                    _ => "\"\""
-                };
-            }
-        }
-
-        public bool IsString =>
-            CSharpType == "string";
-
-        public bool IsNumber =>
-            CSharpType == "int" ||
-            CSharpType == "long" ||
-            CSharpType == "decimal" ||
-            CSharpType == "double" ||
-            CSharpType == "float";
-
-        public bool IsDate =>
-            CSharpType == "DateTime";
-
-        public bool IsBoolean =>
-            CSharpType == "bool";
-    }
+            "number" => "number",
+            "int" => "number",
+            "long" => "number",
+            "decimal" => "number",
+            "double" => "number",
+            "float" => "number",
+            "string" => "string",
+            "boolean" => "boolean",
+            "bool" => "boolean",
+            "date" => "Date",
+            "datetime" => "Date",
+            "guid" => "string",
+            _ => "string"
+        };
 }

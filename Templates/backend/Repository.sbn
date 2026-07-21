@@ -1,49 +1,120 @@
-using Microsoft.EntityFrameworkCore;
-using {{settings.namespace}}.Data;
-using {{settings.namespace}}.Contracts;
-using {{settings.namespace}}.Entities;
-
-namespace {{settings.namespace}}.Repositories;
-
-public class {{tablename}}Repository : I{{tablename}}Repository
+public class {{tablename}}Repository 
+       : I{{tablename}}Repository
 {
     private readonly AppDbContext _dbContext;
 
-    public {{tablename}}Repository(AppDbContext dbContext)
+
+    public {{tablename}}Repository(
+        AppDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
+
     public async Task<IEnumerable<{{tablename}}Entity>> GetAllAsync()
     {
-        return await _dbContext.{{tablename}}s.ToListAsync();
+        return await _dbContext.{{dbsetname}}
+                             .ToListAsync();
     }
+
 
     public async Task<{{tablename}}Entity?> GetByIdAsync(int id)
     {
-        return await _dbContext.{{tablename}}s.FindAsync(id);
+        return await _dbContext.{{dbsetname}}
+                             .FindAsync(id);
     }
 
-    public async Task<{{tablename}}Entity> AddAsync({{tablename}}Entity entity)
+
+    public async Task<{{tablename}}Entity> AddAsync(
+        {{tablename}}Entity entity)
     {
-        _dbContext.{{tablename}}s.Add(entity);
+        _dbContext.{{dbsetname}}.Add(entity);
+
         await _dbContext.SaveChangesAsync();
+
         return entity;
     }
 
-    public async Task<bool> UpdateAsync({{tablename}}Entity entity)
+
+    public async Task<bool> UpdateAsync(
+        {{tablename}}Entity entity)
     {
-        _dbContext.{{tablename}}s.Update(entity);
+        _dbContext.{{dbsetname}}.Update(entity);
+
         return await _dbContext.SaveChangesAsync() > 0;
     }
+
 
     public async Task<bool> DeleteAsync(int id)
     {
-        var entity = await _dbContext.{{tablename}}s.FindAsync(id);
-        if (entity == null)
+        var entity = await _dbContext.{{dbsetname}}
+                                      .FindAsync(id);
+
+        if(entity == null)
             return false;
 
-        _dbContext.{{tablename}}s.Remove(entity);
+
+        _dbContext.{{dbsetname}}
+                  .Remove(entity);
+
+
         return await _dbContext.SaveChangesAsync() > 0;
     }
+
+    public async Task<PagedResultDto<{{tablename}}Entity>>
+        GetAllPagedAsync(
+        PagedRequestDto request)
+        {
+
+
+        var parameters = new[]
+        {
+
+        new SqlParameter(
+        "@SearchText",
+        request.SearchText ?? (object)DBNull.Value),
+
+
+        new SqlParameter(
+        "@PageNumber",
+        request.PageNumber),
+
+
+        new SqlParameter(
+        "@PageSize",
+        request.PageSize)
+
+        };
+
+
+
+        var result =
+        await _dbContext
+        .{{dbsetname}}
+        .FromSqlRaw(
+        "EXEC sp_{{tablename}}_GetAllPaged @SearchText,@PageNumber,@PageSize",
+        parameters)
+        .ToListAsync();
+
+
+
+        var total =
+        result.Count();
+
+
+
+        return new PagedResultDto<{{tablename}}Entity>
+        {
+
+        Items=result,
+
+        PageNumber=request.PageNumber,
+
+        PageSize=request.PageSize,
+
+        TotalRecords=total
+
+        };
+
+}
 }

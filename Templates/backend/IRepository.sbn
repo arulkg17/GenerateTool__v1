@@ -1,11 +1,30 @@
 using {{settings.namespace}}.Entities;
 
 namespace {{settings.namespace}}.Contracts;
+
 public interface I{{tablename}}Repository
 {
-	Task<IEnumerable<{{tablename}}Entity>> GetAllAsync();
-	Task<{{tablename}}Entity> GetByIdAsync(int id);
-	Task<{{tablename}}Entity> AddAsync({{tablename}}Entity entity);
-	Task<bool> UpdateAsync({{table_name}}Entity entity);
-	Task<bool> DeleteAsync(int id);
+
+Task<IEnumerable<{{tablename}}Entity>> GetAllAsync();
+
+
+Task<{{tablename}}Entity?> GetByIdAsync(int id);
+
+
+
+Task<PagedResultDto<{{tablename}}Entity>>
+GetAllPagedAsync(
+PagedRequestDto request);
+
+
+Task<{{tablename}}Entity> AddAsync(
+{{tablename}}Entity entity);
+
+
+Task<bool> UpdateAsync(
+{{tablename}}Entity entity);
+
+
+Task<bool> DeleteAsync(int id);
+
 }

@@ -8,4 +8,5 @@ public interface I{{tablename}}Service
     Task<{{tablename}}Dto> AddAsync({{table_name}}Dto dto);
     Task<bool> UpdateAsync({{tablename}}Dto dto);
     Task<bool> DeleteAsync(int id);
+    Task<PagedResultDto<{{tablename}}Dto>> GetAllPagedAsync(PagedRequestDto request);
 }

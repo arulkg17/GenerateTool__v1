@@ -1,29 +1,107 @@
 {
-  "TableName": "Category",
+  "settings": {
+    "namespace": "InvoiceManagement",
+    "projectName": "InvoiceManagement.Api",
+    "database": "InvoiceDb",
+    "provider": "SqlServer"
+  },
+
+  "tablename": "Category",
+
+  "entityname": "CategoryEntity",
+
+  "dbsetname": "Categories",
+
   "apiUrl": "/api/category",
+
+  "paging": {
+    "enabled": true,
+    "pageNumber": 1,
+    "pageSize": 10,
+    "searchEnabled": true
+  },
+
+  "storedProcedures": {
+    "insert": "sp_Category_Insert",
+    "update": "sp_Category_Update",
+    "delete": "sp_Category_Delete",
+    "getById": "sp_Category_GetById",
+    "getAll": "sp_Category_GetAll",
+    "getAllPaged": "sp_Category_GetAllPaged"
+  },
+  "projectType": [
+    "WebApi",
+    "WinForms",
+    "Angular",
+    "React"
+  ],
   "Columns": [
     {
       "name": "Id",
       "type": "number",
-      "isPrimary": true
+      "sqlType": "INT",
+      "isPrimary": true,
+      "isIdentity": true,
+      "required": true
     },
     {
       "name": "Code",
       "type": "string",
-      "required": true
+      "sqlType": "NVARCHAR(50)",
+      "required": true,
+      "maxlength": 50,
+      "searchable": true
     },
     {
       "name": "Name",
       "type": "string",
-      "required": true
+      "sqlType": "NVARCHAR(100)",
+      "required": true,
+      "maxlength": 100,
+      "searchable": true
     },
     {
       "name": "Description",
-      "type": "string"
+      "type": "string",
+      "sqlType": "NVARCHAR(500)",
+      "required": false,
+      "maxlength": 500,
+      "searchable": true
     },
     {
       "name": "IsActive",
-      "type": "boolean"
+      "type": "boolean",
+      "sqlType": "BIT",
+      "required": true,
+      "defaultValue": true
+    },
+    {
+      "name": "CreatedBy",
+      "type": "string",
+      "sqlType": "NVARCHAR(500)",
+      "required": true,
+      "defaultValue": "SYSTEM_USER"
+    },
+    {
+      "name": "CreatedDate",
+      "type": "datetime",
+      "sqlType": "DATETIME",
+      "required": false,
+      "defaultValue": "GETDATE()"
+    },
+    {
+      "name": "UpdatedBy",
+      "type": "string",
+      "sqlType": "NVARCHAR(500)",
+      "required": true,
+      "defaultValue": "SYSTEM_USER"
+    },
+    {
+      "name": "UpdatedDate",
+      "type": "datetime",
+      "sqlType": "DATETIME",
+      "required": false,
+      "defaultValue": "GETDATE()"
     }
   ]
 }

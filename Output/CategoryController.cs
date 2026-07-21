@@ -225,4 +225,11 @@ public class Controller : ControllerBase
             });
         }
     }
+    [HttpGet("paged")]
+    public async Task<IActionResult> GetAllPaged([FromQuery]PagedRequestDto request)
+    {
+        var result =   await _service.GetAllPagedAsync(request);
+        return Ok(result);
+    }
+
 }

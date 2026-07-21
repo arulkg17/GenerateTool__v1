@@ -14,7 +14,7 @@ Directory.CreateDirectory(outputDir);
 var templateBackendPathSbn = "Templates\\backend";
 var templateAngularParthSbn = "Templates\\angular";
 var templateReactPathSbn = "Templates\\react";
-
+var templateDatabasePathSbn = "Templates\\dababase";
 
 // Template path for backend
 var tmplModelPath = Path.Combine(rootPath, templateBackendPathSbn, "model.sbn");
@@ -34,6 +34,7 @@ var tmplServicePath = Path.Combine(rootPath, templateBackendPathSbn, "Service.sb
 
 var tmplMapperPath = Path.Combine(rootPath, templateBackendPathSbn, "mapper.sbn");
 
+var tmplDatabasePath = Path.Combine(rootPath, templateDatabasePathSbn, "TableAndStoredProcedure.sbn");
 
 //  Template path Angular
 var tmplAngularServicePath = Path.Combine(rootPath, "Templates", "angular-service.sbn");
@@ -67,11 +68,11 @@ var templateModel = new TemplateModel
 
 Console.WriteLine(schema.TableName);
 
-foreach (var col in schema.Columns)
-{
-    Console.WriteLine($"{col.Name}  {col.IsPrimary}");
-}
-Console.ReadLine();
+//foreach (var col in schema.Columns)
+//{
+//    Console.WriteLine($"{col.Name}  {col.IsPrimary}");
+//}
+//Console.ReadLine();
 
 string GenerateCode(string templatePath, object model)
 {
@@ -80,6 +81,8 @@ string GenerateCode(string templatePath, object model)
     return template.Render(model, member => member.Name.ToLower());
 }
 
+
+var tableSpCode = GenerateCode(tmplDatabasePath, templateModel);
 var entityCode = GenerateCode(tmplEntityPath, templateModel);
 var dtoCode = GenerateCode(tmplDtoPath, templateModel);
 var modelCode = GenerateCode(tmplModelPath, templateModel);
@@ -99,17 +102,12 @@ var loginjwtcontrollerCode = GenerateCode(tmplLoginJwtControllerPath, templateMo
 var angularServiceCode = GenerateCode(tmplAngularServicePath, templateModel);
 
 // Write file
+
 var modelfilePath = Path.Combine(outputDir, $"{schema.TableName}.cs");
 File.WriteAllText(modelfilePath, modelCode);
 
-var controllerfilePath = Path.Combine(outputDir, $"{schema.TableName}Controller.cs");
-File.WriteAllText(controllerfilePath, controllerCode);
-
-var loginjwtcontrollerfilePath = Path.Combine(outputDir, $"LoginJwtController.cs");
-File.WriteAllText(loginjwtcontrollerfilePath, loginjwtcontrollerCode);
-
-var angularservicefilePath = Path.Combine(outputDir, $"{schema.TableName}Service.cs");
-File.WriteAllText(angularservicefilePath, angularServiceCode);
+var tableSPfilePath = Path.Combine(outputDir, $"{schema.TableName}DbScript.sql");
+File.WriteAllText(tableSPfilePath, tableSpCode);
 
 var entityfilePath = Path.Combine(outputDir, $"{schema.TableName}Entity.cs");
 File.WriteAllText(entityfilePath, entityCode);
@@ -132,6 +130,15 @@ File.WriteAllText(servicefilePath, serviceCode);
 
 var mapperfilePath = Path.Combine(outputDir, $"{schema.TableName}Profile.cs");
 File.WriteAllText(mapperfilePath, mapperCode);
+
+var controllerfilePath = Path.Combine(outputDir, $"{schema.TableName}Controller.cs");
+File.WriteAllText(controllerfilePath, controllerCode);
+
+var loginjwtcontrollerfilePath = Path.Combine(outputDir, $"LoginJwtController.cs");
+File.WriteAllText(loginjwtcontrollerfilePath, loginjwtcontrollerCode);
+
+var angularservicefilePath = Path.Combine(outputDir, $"{schema.TableName}Service.cs");
+File.WriteAllText(angularservicefilePath, angularServiceCode);
 
 
 Console.WriteLine("File generated successfully!");
