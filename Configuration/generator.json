@@ -1,0 +1,15 @@
+{
+  "ProjectName": "InvoiceManagement",
+  "Namespace": "InvoiceManagement",
+  "Database": "SQLServer",
+  "ORM": "EntityFramework",
+  "Authentication": "JWT",
+  "UI": "Angular",
+  "AngularVersion": "21",
+  "ReactVersion": "19",
+  "DotNetVersion": "10",
+  "UseRepository": true,
+  "UseService": true,
+  "UseCQRS": false,
+  "UseStoredProcedure": true
+}

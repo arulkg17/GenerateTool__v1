@@ -1,13 +1,13 @@
 using AutoMapper;
-using <Your Namespace>.Entities;
-using <Your Namespace>.DTOs;
+using {{settings.namespace}}.Entities;
+using {{settings.namespace}}.DTOs;
 
-namespace <Your Namespace>.Mapper;
+namespace {{settings.namespace}}.Mapper;
 
-public class {{table_name}}Profile : Profile
+public class {{tablename}}Profile : Profile
 {
-    public {{table_name}}Profile()
+    public {{tablename}}Profile()
     {
-        CreateMap<{{table_name}}Entity, {{table_name}}Dto>().ReverseMap();
+        CreateMap<{{tablename}}Entity, {{tablename}}Dto>().ReverseMap();
     }
 }

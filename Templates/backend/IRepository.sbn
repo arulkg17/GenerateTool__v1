@@ -1,11 +1,11 @@
-using <Your Namespoace>.Entities;
+using {{settings.namespace}}.Entities;
 
-namespace <Your Namespace>.Contracts;
-public interface I{{table_name}}Repository
+namespace {{settings.namespace}}.Contracts;
+public interface I{{tablename}}Repository
 {
-	Task<IEnumerable<{{table_name}}Entity>> GetAllAsync();
-	Task<{{table_name}}Entity> GetByIdAsync(int id);
-	Task<{{table_name}}Entity> AddAsync({{table_name}}Entity entity);
+	Task<IEnumerable<{{tablename}}Entity>> GetAllAsync();
+	Task<{{tablename}}Entity> GetByIdAsync(int id);
+	Task<{{tablename}}Entity> AddAsync({{tablename}}Entity entity);
 	Task<bool> UpdateAsync({{table_name}}Entity entity);
 	Task<bool> DeleteAsync(int id);
 }

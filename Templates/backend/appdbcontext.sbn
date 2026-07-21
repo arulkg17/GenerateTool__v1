@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace <<Your Namespace>>.Data
+namespace {{settings.namespace}}.Data
 {
     public class AppDbContext : DbContext
     {
@@ -10,16 +10,16 @@ namespace <<Your Namespace>>.Data
         }
 
         // 🔹 DbSets
-        public DbSet<{{table_name}}> {{table_name}}s { get; set; }
+        public DbSet<{{tablename}}> {{tablename}} { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             // 🔹 Apply configurations per entity
-            modelBuilder.Entity<{{table_name}}>(entity =>
+            modelBuilder.Entity<{{tablename}}>(entity =>
             {
-                entity.ToTable("{{table_name}}");
+                entity.ToTable("{{tablename}}");
 
 {{ for col in columns }}
                 // Column: {{col.name}}

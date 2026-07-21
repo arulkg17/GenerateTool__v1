@@ -1,15 +1,20 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace <Your Namespace>.Entities;
+namespace {{settings.namespace}}.Entities;
 
-public class {{table_name}}Entity
+public class {{tablename}}Entity
 {
-{{ for col in columns }}
-    {{ if col.isprimarykey == true }}[Key]
-    {{ end }}{{ if col.required == true }}[Required]
-    {{ end }}public {{col.type}} {{col.name}} { get; set; }
+{{~ for col in columns ~}}
+    {{~ if col.isprimary == true ~}}
+        [Key]
+    {{~ end ~}}
+    {{~ if col.required == true ~}}
+        [Required]
+    {{~ end ~}}
 
-{{ end }}
+    public {{col.csharptype}} {{col.name}} { get; set; }
+
+{{~ end ~}}
     [Timestamp]
     public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 }

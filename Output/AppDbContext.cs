@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace <<Your Namespace>>.Data
+namespace InvoiceManagement.Data
 {
     public class AppDbContext : DbContext
     {
@@ -10,21 +10,27 @@ namespace <<Your Namespace>>.Data
         }
 
         // 🔹 DbSets
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Category { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             // 🔹 Apply configurations per entity
-            modelBuilder.Entity<Product>(entity =>
+            modelBuilder.Entity<Category>(entity =>
             {
-                entity.ToTable("Product");
+                entity.ToTable("Category");
 
 
                 // Column: Id
                 entity.Property(e => e.Id)
                     .HasColumnName("Id");
+
+                // Column: Code
+                entity.Property(e => e.Code)
+                    .HasColumnName("Code")
+                    .HasMaxLength(100)
+                    .IsRequired();
 
                 // Column: Name
                 entity.Property(e => e.Name)
@@ -32,15 +38,22 @@ namespace <<Your Namespace>>.Data
                     .HasMaxLength(100)
                     .IsRequired();
 
-                // Column: Price
-                entity.Property(e => e.Price)
-                    .HasColumnName("Price");
+                // Column: Description
+                entity.Property(e => e.Description)
+                    .HasColumnName("Description")
+                    .HasMaxLength(100);
+
+                // Column: IsActive
+                entity.Property(e => e.IsActive)
+                    .HasColumnName("IsActive");
 
 
                 // 🔹 Primary Key
 
 
-                entity.HasKey(e => e.Id);
+
+
+
 
 
 
@@ -51,8 +64,9 @@ namespace <<Your Namespace>>.Data
                 // 🔹 Identity column
 
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd();
+
+
+
 
 
 

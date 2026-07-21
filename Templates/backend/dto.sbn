@@ -1,6 +1,8 @@
-public class {{table_name}}Dto
+
+namespace {{settings.namespace}}.Dto;
+public class {{tablename}}Dto
 {
 {{ for col in columns }}
-    public {{col.type}} {{col.name}} { get; set; }
+    public {{col.csharptype}} {{col.name}} { get; set; }
 {{ end }}
 }

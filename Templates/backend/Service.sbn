@@ -1,48 +1,48 @@
 using Microsoft.EntityFrameworkCore;
-using <Your Namespace>.Contracts;
-using <Your Namespace>.DTOs;
-using <Your Namespace>.Entities;
+using {{settings.namespace}}.Contracts;
+using {{settings.namespace}}.DTOs;
+using {{settings.namespace}}.Entities;
 using AutoMapper;
 
-namespace <Your Namespace>.Services;
+namespace {{settings.namespace}}.Services;
 
-public class {{table_name}}Service : I{{table_name}}Service
+public class {{tablename}}Service : I{{tablename}}Service
 {
-    private readonly I{{table_name}}Repository _repository;
+    private readonly I{{tablename}}Repository _repository;
     private readonly IMapper _mapper;
 
-    public {{table_name}}Service(I{{table_name}}Repository repository, IMapper mapper)
+    public {{tablename}}Service(I{{tablename}}Repository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<{{table_name}}Dto>> GetAllAsync()
+    public async Task<IEnumerable<{{tablename}}Dto>> GetAllAsync()
     {
         var entities = await _repository.GetAllAsync();
-        return _mapper.Map<IEnumerable<{{table_name}}Dto>>(entities);
+        return _mapper.Map<IEnumerable<{{tablename}}Dto>>(entities);
     }
 
-    public async Task<{{table_name}}Dto?> GetByIdAsync(int id)
+    public async Task<{{tablename}}Dto?> GetByIdAsync(int id)
     {
         var entity = await _repository.GetByIdAsync(id);
         if (entity == null) return null;
 
-        return _mapper.Map<{{table_name}}Dto>(entity);
+        return _mapper.Map<{{tablename}}Dto>(entity);
     }
 
-    public async Task<{{table_name}}Dto> AddAsync({{table_name}}Dto dto)
+    public async Task<{{tablename}}Dto> AddAsync({{tablename}}Dto dto)
     {
-        var entity = _mapper.Map<{{table_name}}Entity>(dto);
+        var entity = _mapper.Map<{{tablename}}Entity>(dto);
 
         var created = await _repository.AddAsync(entity);
 
-        return _mapper.Map<{{table_name}}Dto>(created);
+        return _mapper.Map<{{tablename}}Dto>(created);
     }
 
-    public async Task<bool> UpdateAsync({{table_name}}Dto dto)
+    public async Task<bool> UpdateAsync({{tablename}}Dto dto)
     {
-        var entity = _mapper.Map<{{table_name}}Entity>(dto);
+        var entity = _mapper.Map<{{tablename}}Entity>(dto);
         return await _repository.UpdateAsync(entity);
     }
 

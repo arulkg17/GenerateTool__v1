@@ -1,11 +1,11 @@
-using <Your Namespace>.DTOs;
+using {{settings.namespace}}.DTOs;
 
-namespace <Your Namespace>.Contracts;
-public interface I{{table_name}}Service
+namespace {{settings.namespace}}.Contracts;
+public interface I{{tablename}}Service
 {
-    Task<IEnumerable<{{table_name}}Dto>> GetAllAsync();
-    Task<{{table_name}}Dto> GetByIdAsync(int id);
-    Task<{{table_name}}Dto> AddAsync({{table_name}}Dto dto);
-    Task<bool> UpdateAsync({{table_name}}Dto dto);
+    Task<IEnumerable<{{tablename}}Dto>> GetAllAsync();
+    Task<{{tablename}}Dto> GetByIdAsync(int id);
+    Task<{{tablename}}Dto> AddAsync({{table_name}}Dto dto);
+    Task<bool> UpdateAsync({{tablename}}Dto dto);
     Task<bool> DeleteAsync(int id);
 }

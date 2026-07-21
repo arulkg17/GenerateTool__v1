@@ -38,9 +38,40 @@ var tmplMapperPath = Path.Combine(rootPath, templateBackendPathSbn, "mapper.sbn"
 //  Template path Angular
 var tmplAngularServicePath = Path.Combine(rootPath, "Templates", "angular-service.sbn");
 
-var json = File.ReadAllText(Path.Combine(rootPath,"product.json"));
+var settings = JsonSerializer.Deserialize<GeneratorSettings>(
+    File.ReadAllText(Path.Combine(rootPath, "Configuration", "generator.json")));
+
+string tableName = "category";
+var schemaFolder = Path.Combine(rootPath, "Schemas");
+var schemaFile = Path.Combine(schemaFolder, $"{tableName}.json");
+if (!File.Exists(schemaFile))
+{
+    Console.WriteLine($"Schema file not found: {schemaFile}");
+    return;
+}
+var json = File.ReadAllText(schemaFile);
 var schema = JsonSerializer.Deserialize<TableSchema>(json);
 
+if (schema == null)
+{
+    Console.WriteLine("Invalid JSON Schema");
+    return;
+}
+
+var templateModel = new TemplateModel
+{
+    Settings = settings,
+    Schema = schema
+};
+
+
+Console.WriteLine(schema.TableName);
+
+foreach (var col in schema.Columns)
+{
+    Console.WriteLine($"{col.Name}  {col.IsPrimary}");
+}
+Console.ReadLine();
 
 string GenerateCode(string templatePath, object model)
 {
@@ -49,79 +80,23 @@ string GenerateCode(string templatePath, object model)
     return template.Render(model, member => member.Name.ToLower());
 }
 
-var modelCode = GenerateCode(tmplModelPath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
+var entityCode = GenerateCode(tmplEntityPath, templateModel);
+var dtoCode = GenerateCode(tmplDtoPath, templateModel);
+var modelCode = GenerateCode(tmplModelPath, templateModel);
+var appDbContextCode = GenerateCode(tmplAppDbContextPath, templateModel);
 
-var controllerCode = GenerateCode(tmplControllerPath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
+var irepoCode = GenerateCode(tmplIRepoPath, templateModel);
+var repoCode = GenerateCode(tmplRepoPath, templateModel);
 
-var loginjwtcontrollerCode = GenerateCode(tmplLoginJwtControllerPath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
+var iserviceCode = GenerateCode(tmplIServicePath, templateModel);
+var serviceCode = GenerateCode(tmplServicePath, templateModel);
 
-var angularServiceCode = GenerateCode(tmplAngularServicePath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
+var mapperCode = GenerateCode(tmplMapperPath, templateModel);
 
-var entityCode = GenerateCode(tmplEntityPath, new 
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
+var controllerCode = GenerateCode(tmplControllerPath, templateModel);
+var loginjwtcontrollerCode = GenerateCode(tmplLoginJwtControllerPath, templateModel);
 
-var appDbContextCode = GenerateCode(tmplAppDbContextPath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
-
-var dtoCode = GenerateCode(tmplDtoPath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
-
-var irepoCode = GenerateCode(tmplIRepoPath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
-
-var repoCode = GenerateCode(tmplRepoPath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
-var iserviceCode = GenerateCode(tmplIServicePath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
-
-var serviceCode = GenerateCode(tmplServicePath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
-
-
-var mapperCode = GenerateCode(tmplMapperPath, new
-{
-    table_name = schema.TableName,
-    columns = schema.Columns
-});
-
-
+var angularServiceCode = GenerateCode(tmplAngularServicePath, templateModel);
 
 // Write file
 var modelfilePath = Path.Combine(outputDir, $"{schema.TableName}.cs");
@@ -160,45 +135,4 @@ File.WriteAllText(mapperfilePath, mapperCode);
 
 
 Console.WriteLine("File generated successfully!");
-
-
-//var schema = new TableSchema
-//{
-//    TableName = "Product",
-//    Columns = new List<Column> {
-//        new Column {Name="Id", Type="int"},
-//        new Column { Name="Name", Type="string"},
-//        new Column { Name="Price", Type="decimal" }
-//    }
-//};
-
-//{
-//    "namespace": "MyApp",
-//  "tables": [
-//    {
-//        "name": "Product",
-//      "columns": [
-//        { "name": "Id", "type": "int", "isPrimaryKey": true, "isIdentity": true },
-//        { "name": "Name", "type": "string", "required": true, "maxLength": 100 },
-//        { "name": "Price", "type": "decimal" }
-//      ]
-//    }
-//  ]
-//}
-
-//var templateModel = new
-//{
-//    namespace = schema.Namespace,
-//    tables = schema.Tables
-//};
-
-//GenerateFile("appdbcontext.sbn", "AppDbContext.cs");
-//GenerateFile("dto.sbn", $"{name}Dto.cs");
-//GenerateFile("repository.sbn", $"I{name}Repository.cs");
-//GenerateFile("service.sbn", $"{name}Service.cs");
-//GenerateFile("controller.sbn", $"{name}Controller.cs");
-//GenerateFile("automapper.sbn", $"MappingProfile.cs");
-//GenerateFile("angular-service.sbn", $"{name}.service.ts");
-//GenerateFile("react-component.sbn", $"{name}.jsx");
-
 
