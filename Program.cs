@@ -49,7 +49,7 @@ var tmplIServicePath = Path.Combine(rootPath, templateBackendPathSbn, "IService.
 var tmplServicePath = Path.Combine(rootPath, templateBackendPathSbn, "ServiceEF.sbn");
 
 // Generate Mapper
-var tmplMapperPath = Path.Combine(rootPath, templateBackendPathSbn, "mapper.sbn");
+var tmplAutoMapperPath = Path.Combine(rootPath, templateBackendPathSbn, "AutoMapper.sbn");
 
 // Generate  Db TaBKE AND SP CREATE
 var tmplDatabasePath = Path.Combine(rootPath, templateDatabasePathSbn, "TableAndStoredProcedure.sbn");
@@ -167,7 +167,7 @@ var repoCode = GenerateCode(tmplRepoPath, templateModel);
 var iserviceCode = GenerateCode(tmplIServicePath, templateModel);
 var serviceCode = GenerateCode(tmplServicePath, templateModel);
 
-var mapperCode = GenerateCode(tmplMapperPath, templateModel);
+var autoMapperCode = GenerateCode(tmplAutoMapperPath, templateModel);
 
 var controllerCode = GenerateCode(tmplControllerPath, templateModel);
 var loginjwtcontrollerCode = GenerateCode(tmplLoginJwtControllerPath, templateModel);
@@ -213,8 +213,8 @@ File.WriteAllText(iservicefilePath, iserviceCode);
 var servicefilePath = Path.Combine(outputDir, $"{schema.TableName}ServiceEF.cs");
 File.WriteAllText(servicefilePath, serviceCode);
 
-var mapperfilePath = Path.Combine(outputDir, $"{schema.TableName}Profile.cs");
-File.WriteAllText(mapperfilePath, mapperCode);
+var autoMapperfilePath = Path.Combine(outputDir, $"{schema.TableName}Profile.cs");
+File.WriteAllText(autoMapperfilePath, autoMapperCode);
 
 var controllerfilePath = Path.Combine(outputDir, $"{schema.TableName}Controller.cs");
 File.WriteAllText(controllerfilePath, controllerCode);
