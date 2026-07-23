@@ -1,0 +1,17 @@
+﻿namespace {{settings.namespace}}.DTOs;
+
+public class {{TableName}}SearchDto
+{
+
+public int PageNumber {get;set;} = 1;
+
+public int PageSize {get;set;} = 10;
+
+
+{{ for col in SearchColumns }}
+
+public {{col.type}} {{col.Name}} {get;set;}
+
+{{ end }}
+
+}

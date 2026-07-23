@@ -60,61 +60,34 @@ public class CategoryRepository
 
         return await _dbContext.SaveChangesAsync() > 0;
     }
+     public async Task<PagedResultDto<CategoryDto>> GetAllPagedAsync(CategorySearchDto request)
+     {
 
-    public async Task<PagedResultDto<CategoryEntity>>
-        GetAllPagedAsync(
-        PagedRequestDto request)
-        {
-
-
-        var parameters = new[]
-        {
-
-        new SqlParameter(
-        "@SearchText",
-        request.SearchText ?? (object)DBNull.Value),
+        var parameters = new DynamicParameters();
 
 
-        new SqlParameter(
-        "@PageNumber",
-        request.PageNumber),
+        parameters.Add("@PageNumber",
+        request.PageNumber);
 
 
-        new SqlParameter(
-        "@PageSize",
-        request.PageSize)
-
-        };
+        parameters.Add("@PageSize",
+        request.PageSize);
 
 
+        parameters.Add("@CategoryName",
+        request.CategoryName);
+
+
+        parameters.Add("@Description",
+        request.Description);
 
         var result =
-        await _dbContext
-        .
-        .FromSqlRaw(
-        "EXEC sp_Category_GetAllPaged @SearchText,@PageNumber,@PageSize",
-        parameters)
-        .ToListAsync();
+        await connection.QueryAsync<CategoryDto>
+        (
+        "sp_Category_GetAllPaged",
+        parameters,
+        commandType: CommandType.StoredProcedure
+        );
 
-
-
-        var total =
-        result.Count();
-
-
-
-        return new PagedResultDto<CategoryEntity>
-        {
-
-        Items=result,
-
-        PageNumber=request.PageNumber,
-
-        PageSize=request.PageSize,
-
-        TotalRecords=total
-
-        };
-
-}
+    }    
 }

@@ -1,0 +1,119 @@
+-- =============================================
+-- TEST SCRIPT FOR {{tablename}}
+-- =============================================
+
+PRINT '=============================================';
+PRINT 'Testing {{tablename}} Stored Procedures';
+PRINT '=============================================';
+
+GO
+-- =============================================
+-- INSERT TEST DATA
+-- =============================================
+
+PRINT 'Insert Test Records';
+
+{{~ for i in 1..testdata.recordcount ~}}
+
+PRINT 'Insert Record {{i}}';
+
+EXEC [dbo].[sp_{{tablename}}_Insert]
+
+{{~ for col in insertcolumns ~}}
+    @{{col.name}} = {{ if col.type == "string" }}'Test {{col.name}} {{i}}'{{ else if col.type == "datetime" }}GETDATE(){{ else if col.type == "boolean" }}1{{ else }}{{ col.samplevalue }}{{ end }}{{ if !for.last }},{{ end }}
+{{~ end ~}}
+
+GO
+
+{{~ end ~}}
+
+
+-- =============================================
+-- GET ALL
+-- =============================================
+
+PRINT 'Get All';
+
+EXEC [dbo].[sp_{{tablename}}_GetAll];
+
+GO
+
+
+-- =============================================
+-- GET BY ID
+-- =============================================
+
+PRINT 'Get By Id';
+
+EXEC [dbo].[sp_{{tablename}}_GetById]
+    @Id = 1;
+
+GO
+
+
+-- =============================================
+-- UPDATE
+-- =============================================
+
+PRINT 'Update Record';
+
+EXEC [dbo].[sp_{{tablename}}_Update]
+
+{{~ for col in columns ~}}
+{{~ if col.isupdatable ~}}
+    @{{col.name}} = 1,
+{{~ else ~}}
+    @{{col.name}} = {{col.samplevalue}},
+{{~ end ~}}
+{{~ end ~}}
+
+GO
+
+
+SELECT *
+FROM [dbo].[{{tablename}}];
+
+GO
+
+
+-- =============================================
+-- GET ALL PAGED
+-- =============================================
+
+PRINT 'Get All Paged';
+
+EXEC [dbo].[sp_{{tablename}}_GetAllPaged]
+
+{{~ for col in searchcolumns ~}}
+    @{{col.name}} = NULL,
+{{~ end ~}}
+
+    @PageNumber = 1,
+    @PageSize = 10;
+
+GO
+
+
+-- =============================================
+-- DELETE
+-- =============================================
+
+PRINT 'Delete Record';
+
+EXEC [dbo].[sp_{{tablename}}_Delete]
+    @Id = 1;
+
+GO
+
+
+SELECT *
+FROM [dbo].[{{tablename}}];
+
+GO
+
+
+PRINT '=============================================';
+PRINT '{{tablename}} Stored Procedure Testing Completed';
+PRINT '=============================================';
+
+GO

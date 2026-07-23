@@ -13,5 +13,11 @@ public class TableSchema
 
     [JsonPropertyName("Columns")]
     public List<Column> Columns { get; set; } = new();
+    [JsonPropertyName("storedProcedures")]
+    public StoredProcedures StoredProcedures { get; set; } = new();
+
+    [JsonPropertyName("testData")]
+    public TestData TestData { get; set; } = new();
+
 }
 

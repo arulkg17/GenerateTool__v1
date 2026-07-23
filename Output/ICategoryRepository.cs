@@ -10,12 +10,7 @@ Task<IEnumerable<CategoryEntity>> GetAllAsync();
 
 Task<CategoryEntity?> GetByIdAsync(int id);
 
-
-
-Task<PagedResultDto<CategoryEntity>>
-GetAllPagedAsync(
-PagedRequestDto request);
-
+Task<PagedResultDto<Dto>> GetAllPagedAsync(SearchDto request);
 
 Task<CategoryEntity> AddAsync(
 CategoryEntity entity);

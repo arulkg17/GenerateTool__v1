@@ -1,7 +1,7 @@
 {
   "ProjectName": "InvoiceManagement",
   "Namespace": "InvoiceManagement",
-  "Database": "SQLServer",
+  "Database": "ArulTestInvoiceDb",
   "ORM": "EntityFramework",
   "Authentication": "JWT",
   "UI": "Angular",

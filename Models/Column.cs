@@ -4,6 +4,8 @@ namespace GeneratorTool.Models;
 
 public class Column
 {
+    public int Index { get; set; }
+
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
 
@@ -66,4 +68,71 @@ public class Column
             "guid" => "string",
             _ => "string"
         };
+
+    public string SampleValue
+    {
+        get
+        {
+            return Type.ToLower() switch
+            {
+                "string" => $"'Test {Name}'",
+
+                "number" => "1",
+
+                "int" => "1",
+
+                "long" => "1",
+
+                "boolean" => "1",
+
+                "bool" => "1",
+
+                "datetime" => "GETDATE()",
+
+                "date" => "GETDATE()",
+
+                "decimal" => "10.50",
+
+                "double" => "10.50",
+
+                "float" => "10.50",
+
+                "guid" => "NEWID()",
+
+                _ => "NULL"
+            };
+        }
+    }
+
+    public bool IsAuditColumn
+    {
+        get
+        {
+            return Name.Equals("CreatedBy", StringComparison.OrdinalIgnoreCase)
+                || Name.Equals("CreatedDate", StringComparison.OrdinalIgnoreCase)
+                || Name.Equals("UpdatedBy", StringComparison.OrdinalIgnoreCase)
+                || Name.Equals("UpdatedDate", StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+
+    public bool IsInsertable
+    {
+        get
+        {
+            return !IsIdentity && !IsAuditColumn;
+        }
+    }
+
+
+    public bool IsUpdatable
+    {
+        get
+        {
+            return !IsPrimary && !IsAuditColumn;
+        }
+    }
+
+
+
 }

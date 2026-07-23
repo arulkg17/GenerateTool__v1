@@ -5,22 +5,20 @@
     "database": "InvoiceDb",
     "provider": "SqlServer"
   },
-
   "tablename": "Category",
-
   "entityname": "CategoryEntity",
-
   "dbsetname": "Categories",
-
   "apiUrl": "/api/category",
-
   "paging": {
     "enabled": true,
     "pageNumber": 1,
     "pageSize": 10,
     "searchEnabled": true
   },
-
+  "testData": {
+    "enabled": true,
+    "recordCount": 5
+  },
   "storedProcedures": {
     "insert": "sp_Category_Insert",
     "update": "sp_Category_Update",
