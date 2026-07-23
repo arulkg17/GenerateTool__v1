@@ -92,8 +92,8 @@ SET NOCOUNT ON;
 INSERT INTO [dbo].[{{tablename}}]
 (
 {{~ for col in insertcolumns ~}}
-    [{{col.name}}]{{ if !for.last }},{{ end }}
-{{~ end ~}},
+    [{{col.name}}],
+{{~ end ~}}
     [CreatedBy],
     [CreatedDate],
     [UpdatedBy],
@@ -103,8 +103,8 @@ INSERT INTO [dbo].[{{tablename}}]
 VALUES
 (
 {{~ for col in insertcolumns ~}}
-    @{{col.name}}{{ if !for.last }},{{ end }}
-{{~ end ~}},
+    @{{col.name}},
+{{~ end ~}}
     SYSTEM_USER,
     GETDATE(),
     SYSTEM_USER,

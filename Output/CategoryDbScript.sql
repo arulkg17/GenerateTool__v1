@@ -97,8 +97,7 @@ INSERT INTO [dbo].[Category]
     [Code],
     [Name],
     [Description],
-    [IsActive]
-,
+    [IsActive],
     [CreatedBy],
     [CreatedDate],
     [UpdatedBy],
@@ -110,8 +109,7 @@ VALUES
     @Code,
     @Name,
     @Description,
-    @IsActive
-,
+    @IsActive,
     SYSTEM_USER,
     GETDATE(),
     SYSTEM_USER,

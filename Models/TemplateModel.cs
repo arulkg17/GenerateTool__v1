@@ -82,6 +82,14 @@
                 x.Name != "UpdatedDate")
             .ToList();
 
+        public List<Column> InsertColumnsWithAudit =>
+            Columns
+            .Where(x =>
+                x.Name != "CreatedBy" &&
+                x.Name != "CreatedDate" &&
+                x.Name != "UpdatedBy" &&
+                x.Name != "UpdatedDate")
+            .ToList();
 
     }
 }
