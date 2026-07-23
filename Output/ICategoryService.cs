@@ -5,8 +5,13 @@ public interface ICategoryService
 {
     Task<IEnumerable<CategoryDto>> GetAllAsync();
     Task<CategoryDto> GetByIdAsync(int id);
-    Task<CategoryDto> AddAsync(Dto dto);
+    Task<CategoryDto> AddAsync(CategoryDto dto);
     Task<bool> UpdateAsync(CategoryDto dto);
     Task<bool> DeleteAsync(int id);
-    Task<PagedResultDto<CategoryDto>> GetAllPagedAsync(PagedRequestDto request);
+    Task<PagedResultDto<CategoryDto>> GetAllPagedAsync(
+		string? code,
+		string? name,
+		string? description,
+		int pageNumber,
+		int pageSize);
 }

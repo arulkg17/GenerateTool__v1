@@ -115,6 +115,12 @@ public class Column
         }
     }
 
+    public string CamelName =>
+    string.IsNullOrEmpty(Name)
+        ? Name
+        : char.ToLowerInvariant(Name[0]) + Name.Substring(1);
+
+
 
     public bool IsInsertable
     {

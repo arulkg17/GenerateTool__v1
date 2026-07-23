@@ -4,37 +4,28 @@ namespace InvoiceManagement.Entities;
 
 public class CategoryEntity
 {
-        [Key]
-        [Required]
-
+    [Key]
+    [Required]
     public int Id { get; set; }
 
-        [Required]
-
+    [Required]
     public string Code { get; set; }
 
-        [Required]
-
+    [Required]
     public string Name { get; set; }
-
 
     public string Description { get; set; }
 
-        [Required]
-
+    [Required]
     public bool IsActive { get; set; }
 
-        [Required]
-
+    [Required]
     public string CreatedBy { get; set; }
-
 
     public DateTime CreatedDate { get; set; }
 
-        [Required]
-
+    [Required]
     public string UpdatedBy { get; set; }
-
 
     public DateTime UpdatedDate { get; set; }
 

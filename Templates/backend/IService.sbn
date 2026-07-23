@@ -5,8 +5,13 @@ public interface I{{tablename}}Service
 {
     Task<IEnumerable<{{tablename}}Dto>> GetAllAsync();
     Task<{{tablename}}Dto> GetByIdAsync(int id);
-    Task<{{tablename}}Dto> AddAsync({{table_name}}Dto dto);
+    Task<{{tablename}}Dto> AddAsync({{tablename}}Dto dto);
     Task<bool> UpdateAsync({{tablename}}Dto dto);
     Task<bool> DeleteAsync(int id);
-    Task<PagedResultDto<{{tablename}}Dto>> GetAllPagedAsync(PagedRequestDto request);
+    Task<PagedResultDto<{{tablename}}Dto>> GetAllPagedAsync(
+{{~ for col in searchcolumns ~}}
+		{{ if col.csharptype == "string" }}string?{{ else }}{{ col.csharptype }}?{{ end }} {{ col.camelname }},
+{{~ end ~}}
+		int pageNumber,
+		int pageSize);
 }

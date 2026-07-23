@@ -4,22 +4,15 @@ namespace {{settings.namespace}}.Contracts;
 
 public interface I{{tablename}}Repository
 {
-
-Task<IEnumerable<{{tablename}}Entity>> GetAllAsync();
-
-
-Task<{{tablename}}Entity?> GetByIdAsync(int id);
-
-Task<PagedResultDto<{{TableName}}Dto>> GetAllPagedAsync({{TableName}}SearchDto request);
-
-Task<{{tablename}}Entity> AddAsync(
-{{tablename}}Entity entity);
-
-
-Task<bool> UpdateAsync(
-{{tablename}}Entity entity);
-
-
-Task<bool> DeleteAsync(int id);
-
+	Task<IEnumerable<{{tablename}}Entity>> GetAllAsync();
+	Task<{{tablename}}Entity?> GetByIdAsync(int id);
+	Task<{{tablename}}Entity> AddAsync({{tablename}}Entity entity);
+	Task<bool> UpdateAsync({{tablename}}Entity entity);
+	Task<bool> DeleteAsync(int id);
+	Task<PagedResultDto<{{tablename}}Entity>> GetAllPagedAsync(
+{{~ for col in searchcolumns ~}}
+		{{ if col.csharptype == "string" }}string?{{ else }}{{ col.csharptype }}?{{ end }} {{ col.camelname }},
+{{~ end ~}}
+		int pageNumber,
+		int pageSize);
 }

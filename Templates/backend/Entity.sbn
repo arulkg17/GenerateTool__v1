@@ -5,14 +5,13 @@ namespace {{settings.namespace}}.Entities;
 public class {{tablename}}Entity
 {
 {{~ for col in columns ~}}
-    {{~ if col.isprimary == true ~}}
-        [Key]
-    {{~ end ~}}
-    {{~ if col.required == true ~}}
-        [Required]
-    {{~ end ~}}
-
-    public {{col.csharptype}} {{col.name}} { get; set; }
+{{~ if col.isprimary ~}}
+    [Key]
+{{~ end ~}}
+{{~ if col.required ~}}
+    [Required]
+{{~ end ~}}
+    public {{ col.csharptype }} {{ col.name }} { get; set; }
 
 {{~ end ~}}
     [Timestamp]
