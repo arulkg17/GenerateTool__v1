@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using InvoiceManagement.Contracts;
 using InvoiceManagement.DTOs;
 using InvoiceManagement.Entities;
@@ -11,7 +10,7 @@ public class CategoryServiceEF : ICategoryService
     private readonly ICategoryRepository _repository;
     private readonly IMapper _mapper;
 
-    public CategoryService(ICategoryRepository repository, IMapper mapper)
+    public CategoryServiceEF(ICategoryRepository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -39,32 +38,27 @@ public class CategoryServiceEF : ICategoryService
 
         return _mapper.Map<CategoryDto>(created);
     }
-
-   public async Task<bool> UpdateAsync(CategoryDto dto)
-   {
-        var entity = 
-           _mapper.Map<CategoryEntity>(dto);
+    public async Task<bool> UpdateAsync(CategoryDto dto)
+    {
+        var entity = _mapper.Map<CategoryEntity>(dto);
 
         return await _repository.UpdateAsync(entity);
-   }
-
-   public async Task<bool> DeleteAsync(int id)
+    }
+    public async Task<bool> DeleteAsync(int id)
+    {
+        return await _repository.DeleteAsync(id);
+    }
+   
+   public async Task<PagedResultDto<CategoryDto>> GetAllPagedAsync(CategorySearchDto request)
    {
-     return await _repository.DeleteAsync(id);
+     var result = await _repository.GetAllPagedAsync(request);
+
+     return new PagedResultDto<CategoryDto>
+     {
+        Items = _mapper.Map<IEnumerable<CategoryDto>>(result.Items),
+        TotalRecords = result.TotalRecords,
+        PageNumber = result.PageNumber,
+        PageSize = result.PageSize
+     };
    }
-   public async Task<PagedResultDto<CategoryDto>>  GetAllPagedAsync(PagedRequestDto request)
-   {
-            var result =  await _repository.GetAllPagedAsync(request);
-
-            return new PagedResultDto<CategoryDto>
-            {
-
-            Items =  _mapper.Map<IEnumerable<CategoryDto>>(result.Items),
-            TotalRecords=result.TotalRecords,
-            PageNumber=result.PageNumber,
-            PageSize=result.PageSize
-            };
-
-   }
-
 }

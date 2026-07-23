@@ -3,7 +3,6 @@ using InvoiceManagement.Data;
 using InvoiceManagement.Dto;
 using InvoiceManagement.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using Dapper;
 namespace InvoiceManagement.Repositories;
@@ -54,6 +53,8 @@ public class CategoryRepositoryEF : BaseRepository, ICategoryRepository
         //_dbContext.Categories
         //          .Remove(entity);
         entity.IsActive = false;
+        entity.UpdatedBy = "SYSTEM";      // or current user
+        entity.UpdatedDate = DateTime.Now;
         return await _dbContext.SaveChangesAsync() > 0;
     }
     public async Task<PagedResultDto<CategoryDto>> GetAllPagedAsync(CategorySearchDto request)

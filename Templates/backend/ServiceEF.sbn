@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using {{settings.namespace}}.Contracts;
 using {{settings.namespace}}.DTOs;
 using {{settings.namespace}}.Entities;
@@ -11,7 +10,7 @@ public class {{tablename}}ServiceEF : I{{tablename}}Service
     private readonly I{{tablename}}Repository _repository;
     private readonly IMapper _mapper;
 
-    public {{tablename}}Service(I{{tablename}}Repository repository, IMapper mapper)
+    public {{tablename}}ServiceEF(I{{tablename}}Repository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -39,32 +38,27 @@ public class {{tablename}}ServiceEF : I{{tablename}}Service
 
         return _mapper.Map<{{tablename}}Dto>(created);
     }
-
-   public async Task<bool> UpdateAsync({{tablename}}Dto dto)
-   {
-        var entity = 
-           _mapper.Map<{{tablename}}Entity>(dto);
+    public async Task<bool> UpdateAsync({{tablename}}Dto dto)
+    {
+        var entity = _mapper.Map<{{tablename}}Entity>(dto);
 
         return await _repository.UpdateAsync(entity);
-   }
-
-   public async Task<bool> DeleteAsync(int id)
+    }
+    public async Task<bool> DeleteAsync(int id)
+    {
+        return await _repository.DeleteAsync(id);
+    }
+   
+   public async Task<PagedResultDto<{{tablename}}Dto>> GetAllPagedAsync({{tablename}}SearchDto request)
    {
-     return await _repository.DeleteAsync(id);
+     var result = await _repository.GetAllPagedAsync(request);
+
+     return new PagedResultDto<{{tablename}}Dto>
+     {
+        Items = _mapper.Map<IEnumerable<{{tablename}}Dto>>(result.Items),
+        TotalRecords = result.TotalRecords,
+        PageNumber = result.PageNumber,
+        PageSize = result.PageSize
+     };
    }
-   public async Task<PagedResultDto<{{tablename}}Dto>>  GetAllPagedAsync(PagedRequestDto request)
-   {
-            var result =  await _repository.GetAllPagedAsync(request);
-
-            return new PagedResultDto<{{tablename}}Dto>
-            {
-
-            Items =  _mapper.Map<IEnumerable<{{tablename}}Dto>>(result.Items),
-            TotalRecords=result.TotalRecords,
-            PageNumber=result.PageNumber,
-            PageSize=result.PageSize
-            };
-
-   }
-
 }

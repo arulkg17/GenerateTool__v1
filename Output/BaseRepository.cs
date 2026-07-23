@@ -1,6 +1,7 @@
 using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using InvoiceManagement.DTOs;
 
 namespace InvoiceManagement.Repositories;
 
@@ -15,11 +16,10 @@ public abstract class BaseRepository
 
     protected IDbConnection CreateConnection()
     {
-        return new SqlConnection(
-            _configuration.GetConnectionString("DefaultConnection"));
+        var connectionString = _configuration.GetConnectionString("DefaultConnection")
+        ?? throw new InvalidOperationException("DefaultConnection is missing.");
     }
-    
-    protected async Task<PagedResultDto<TDto>> ExecutePagedAsync<TDto>(
+    protected virtual async Task<PagedResultDto<TDto>> ExecutePagedAsync<TDto>
         string storedProcedure,
         DynamicParameters parameters,
         int pageNumber,
