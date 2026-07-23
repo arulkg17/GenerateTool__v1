@@ -114,8 +114,8 @@ VALUES
 ,
     SYSTEM_USER,
     GETDATE(),
-    NULL,
-    NULL
+    SYSTEM_USER,
+    GETDATE()
 );
 
 SELECT SCOPE_IDENTITY() AS Id;

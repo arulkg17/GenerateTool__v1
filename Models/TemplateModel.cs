@@ -49,6 +49,39 @@
 
         public string DatabaseName => Settings.Database;
 
+        // Primary key column
+        public Column PrimaryKeyColumn =>
+            Columns.FirstOrDefault(x => x.IsPrimary)
+            ?? Columns.First(x => x.Name.Equals("Id",
+                StringComparison.OrdinalIgnoreCase));
+
+
+        // Columns used for UPDATE test execution
+        // Excludes Audit columns and Primary Key
+        public List<Column> UpdateTestColumns =>
+            Columns
+            .Where(x =>
+                !x.IsPrimary &&
+                x.IsUpdatable &&
+                x.Name != "CreatedBy" &&
+                x.Name != "CreatedDate" &&
+                x.Name != "UpdatedBy" &&
+                x.Name != "UpdatedDate")
+            .ToList();
+
+
+        // Columns used for INSERT test execution
+        // Excludes Id and Audit columns
+        public List<Column> InsertTestColumns =>
+            Columns
+            .Where(x =>
+                !x.IsPrimary &&
+                x.Name != "CreatedBy" &&
+                x.Name != "CreatedDate" &&
+                x.Name != "UpdatedBy" &&
+                x.Name != "UpdatedDate")
+            .ToList();
+
 
     }
 }

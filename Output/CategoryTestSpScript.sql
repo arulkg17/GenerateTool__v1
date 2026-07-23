@@ -106,15 +106,11 @@ PRINT 'Update Record';
 
 EXEC [dbo].[sp_Category_Update]
 
-    @Id = 1,
-    @Code = 1,
-    @Name = 1,
-    @Description = 1,
-    @IsActive = 1,
-    @CreatedBy = 'Test CreatedBy',
-    @CreatedDate = GETDATE(),
-    @UpdatedBy = 'Test UpdatedBy',
-    @UpdatedDate = GETDATE(),
+@Id = 1,
+@Code = 'Test Code',
+@Name = 'Test Name',
+@Description = 'Test Description',
+@IsActive = 1
 
 GO
 

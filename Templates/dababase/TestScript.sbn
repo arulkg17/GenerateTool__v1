@@ -59,12 +59,9 @@ PRINT 'Update Record';
 
 EXEC [dbo].[sp_{{tablename}}_Update]
 
-{{~ for col in columns ~}}
-{{~ if col.isupdatable ~}}
-    @{{col.name}} = 1,
-{{~ else ~}}
-    @{{col.name}} = {{col.samplevalue}},
-{{~ end ~}}
+@Id = 1,
+{{~ for col in updatetestcolumns ~}}
+@{{col.name}} = {{col.samplevalue}}{{ if !for.last }},{{ end }}
 {{~ end ~}}
 
 GO
