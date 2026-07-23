@@ -1,0 +1,76 @@
+using {{settings.namespace}}.Contracts;
+using {{settings.namespace}}.Data;
+using {{settings.namespace}}.Dto;
+using {{settings.namespace}}.Entities;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
+using Dapper;
+namespace {{settings.namespace}}.Repositories;
+
+public class {{tablename}}RepositoryEF : BaseRepository, I{{tablename}}Repository
+{
+    private readonly AppDbContext _dbContext;
+
+    public {{tablename}}RepositoryEF(AppDbContext dbContext, IConfiguration configuration) 
+    :base(configuration)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<IEnumerable<{{tablename}}Entity>> GetAllAsync()
+    {
+        return await _dbContext.{{schema.dbsetname}} 
+                             .AsNoTracking()
+                             .ToListAsync();
+    }
+
+    public async Task<{{tablename}}Entity?> GetByIdAsync(int id)
+    {
+        return await _dbContext.{{schema.dbsetname}}
+                             .AsNoTracking()
+                             .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<{{tablename}}Entity> AddAsync({{tablename}}Entity entity)
+    {
+        _dbContext.{{schema.dbsetname}}.Add(entity);
+        await _dbContext.SaveChangesAsync();
+        return entity;
+    }
+
+    public async Task<bool> UpdateAsync({{tablename}}Entity entity)
+    {
+        _dbContext.{{schema.dbsetname}}.Update(entity);
+        return await _dbContext.SaveChangesAsync() > 0;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var entity = await _dbContext.{{schema.dbsetname}}
+                                      .FindAsync(id);
+        if(entity == null)
+            return false;
+        //_dbContext.{{schema.dbsetname}}
+        //          .Remove(entity);
+        entity.IsActive = false;
+        entity.UpdatedBy = "SYSTEM";      // or current user
+        entity.UpdatedDate = DateTime.Now;
+        return await _dbContext.SaveChangesAsync() > 0;
+    }
+    public async Task<PagedResultDto<CategoryDto>> GetAllPagedAsync(CategorySearchDto request)
+    {
+        var parameters = new DynamicParameters();
+        parameters.Add("@PageNumber", request.PageNumber);
+        parameters.Add("@PageSize", request.PageSize);
+
+    {{ for col in searchcolumns }}
+        parameters.Add("@{{col.name}}", request.{{col.name}});
+    {{ end }}
+
+        return await ExecutePagedAsync<CategoryDto>(
+            "sp_Category_GetAllPaged",
+            parameters,
+            request.PageNumber,
+            request.PageSize);
+    }
+}

@@ -6,7 +6,7 @@ using AutoMapper;
 
 namespace {{settings.namespace}}.Services;
 
-public class {{tablename}}Service : I{{tablename}}Service
+public class {{tablename}}ServiceEF : I{{tablename}}Service
 {
     private readonly I{{tablename}}Repository _repository;
     private readonly IMapper _mapper;

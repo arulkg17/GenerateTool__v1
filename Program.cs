@@ -34,14 +34,19 @@ var tmplLoginJwtControllerPath = Path.Combine(rootPath, templateBackendPathSbn, 
 var tmplEntityPath = Path.Combine(rootPath, templateBackendPathSbn, "entity.sbn");
 var tmplAppDbContextPath = Path.Combine(rootPath, templateBackendPathSbn, "appdbcontext.sbn");
 var tmplDtoPath = Path.Combine(rootPath, templateBackendPathSbn, "dto.sbn");
+var tmplSearchDtoPath = Path.Combine(rootPath, templateBackendPathSbn, "SearchDto.sbn");
+var tmplPagedResultDtopath = Path.Combine(rootPath, templateBackendPathSbn, "PagedResultDto.sbn");
+
+// BaseRepository 
+var tmplBaseRepoPath = Path.Combine(rootPath, templateBackendPathSbn, "BaseRepository.sbn");
 
 // Repository Interface and implementation 
 var tmplIRepoPath = Path.Combine(rootPath, templateBackendPathSbn, "IRepository.sbn");
-var tmplRepoPath = Path.Combine(rootPath, templateBackendPathSbn, "Repository.sbn");
+var tmplRepoPath = Path.Combine(rootPath, templateBackendPathSbn, "RepositoryEF.sbn");
 
 // Service Interface and Implementation 
 var tmplIServicePath = Path.Combine(rootPath, templateBackendPathSbn, "IService.sbn");
-var tmplServicePath = Path.Combine(rootPath, templateBackendPathSbn, "Service.sbn");
+var tmplServicePath = Path.Combine(rootPath, templateBackendPathSbn, "ServiceEF.sbn");
 
 // Generate Mapper
 var tmplMapperPath = Path.Combine(rootPath, templateBackendPathSbn, "mapper.sbn");
@@ -149,8 +154,12 @@ var tableTestSpCode = GenerateCode(tmplDbTestScriptPath, templateModel);
 
 var entityCode = GenerateCode(tmplEntityPath, templateModel);
 var dtoCode = GenerateCode(tmplDtoPath, templateModel);
+var searchDtoCode = GenerateCode(tmplSearchDtoPath, templateModel);
+var pagedResultDtoCode = GenerateCode(tmplPagedResultDtopath, templateModel);
 var modelCode = GenerateCode(tmplModelPath, templateModel);
 var appDbContextCode = GenerateCode(tmplAppDbContextPath, templateModel);
+
+var baseRepoCode = GenerateCode(tmplBaseRepoPath, templateModel);
 
 var irepoCode = GenerateCode(tmplIRepoPath, templateModel);
 var repoCode = GenerateCode(tmplRepoPath, templateModel);
@@ -185,14 +194,23 @@ File.WriteAllText(appdbcontextfilePath, appDbContextCode);
 var dtofilePath = Path.Combine(outputDir, $"{schema.TableName}Dto.cs");
 File.WriteAllText(dtofilePath, dtoCode);
 
+var searchDtofilePath = Path.Combine(outputDir, $"{schema.TableName}SearchDto.cs");
+File.WriteAllText(searchDtofilePath, searchDtoCode);
+
+var pagedResultDtofilePath = Path.Combine(outputDir, $"PagedResultDto.cs");
+File.WriteAllText(pagedResultDtofilePath, pagedResultDtoCode);
+
+var baseRepofilePath = Path.Combine(outputDir, $"BaseRepository.cs");
+File.WriteAllText(baseRepofilePath, baseRepoCode);
+
 var irepofilePath = Path.Combine(outputDir, $"I{schema.TableName}Repository.cs");
 File.WriteAllText(irepofilePath, irepoCode);
-var repofilePath = Path.Combine(outputDir, $"{schema.TableName}Repository.cs");
+var repofilePath = Path.Combine(outputDir, $"{schema.TableName}RepositoryEF.cs");
 File.WriteAllText(repofilePath, repoCode);
 
 var iservicefilePath = Path.Combine(outputDir, $"I{schema.TableName}Service.cs");
 File.WriteAllText(iservicefilePath, iserviceCode);
-var servicefilePath = Path.Combine(outputDir, $"{schema.TableName}Service.cs");
+var servicefilePath = Path.Combine(outputDir, $"{schema.TableName}ServiceEF.cs");
 File.WriteAllText(servicefilePath, serviceCode);
 
 var mapperfilePath = Path.Combine(outputDir, $"{schema.TableName}Profile.cs");

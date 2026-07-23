@@ -1,0 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+namespace {{settings.namespace}}.Dtos;
+public class {{tablename}}SearchDto
+{
+    public int PageNumber { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
+{{ for col in searchcolumns }}
+    public {{ if col.csharptype == "string" }}string?{{ else }}{{ col.csharptype }}?{{ end }} {{ col.name }} { get; set; }
+{{ end }}
+}

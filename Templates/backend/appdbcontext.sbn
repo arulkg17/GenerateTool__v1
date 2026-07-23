@@ -10,7 +10,7 @@ namespace {{settings.namespace}}.Data
         }
 
         // 🔹 DbSets
-        public DbSet<{{tablename}}> {{dbsetname}}s { get; set; }
+        public DbSet<{{tablename}}> {{schema.dbsetname}} { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

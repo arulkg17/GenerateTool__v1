@@ -10,7 +10,7 @@ namespace InvoiceManagement.Data
         }
 
         // 🔹 DbSets
-        public DbSet<Category> s { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

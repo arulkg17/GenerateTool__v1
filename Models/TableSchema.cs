@@ -18,6 +18,8 @@ public class TableSchema
 
     [JsonPropertyName("testData")]
     public TestData TestData { get; set; } = new();
+    [JsonPropertyName("dbsetname")]
+    public string DbSetName { get; set; } = string.Empty;
 
 }
 
