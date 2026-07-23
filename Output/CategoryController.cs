@@ -1,55 +1,59 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using <Your Namespace>.Contracts;
-using <Your Namespace>.DTOs;
-using <Your Namespace>.Models;
+using Asp.Versioning;
+using InvoiceManagement.Contracts;
+using InvoiceManagement.DTOs;
+using InvoiceManagement.Models;
 
-namespace <Your Namespace>.Controllers;
+namespace InvoiceManagement.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [Authorize]
 [ApiVersion("1.0")]
-public class Controller : ControllerBase
+public class CategoryController : ControllerBase
 {
-    private readonly IService _service;
-    private readonly ILogger<Controller> _logger;
+    private readonly ICategoryService _service;
+    private readonly ILogger<CategoryController> _logger;
 
-    public Controller(
-        IService service,
-        ILogger<Controller> logger)
+    public CategoryController(
+        ICategoryService service,
+        ILogger<CategoryController> logger)
     {
         _service = service;
         _logger = logger;
     }
 
     [HttpGet("GetAll")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
         try
         {
-            _logger.LogInformation("GetAll  started");
+            _logger.LogInformation("GetAll Category started");
 
             var data = await _service.GetAllAsync();
 
-            _logger.LogInformation("GetAll  completed successfully");
+            _logger.LogInformation("GetAll Category completed successfully");
 
-            return Ok(new ApiResponse<IEnumerable<Dto>>
+            return Ok(new ApiResponse<IEnumerable<CategoryDto>>
             {
                 Success = true,
-                Message = " retrieved successfully",
+                Message = "Category retrieved successfully",
                 Data = data
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred in GetAll ");
+            _logger.LogError(ex, "Error occurred in GetAll Category");
 
             return StatusCode(500, new ApiResponse<string>
             {
                 Success = false,
-                Message = "Error retrieving ",
+                Message = "Error retrieving Category",
                 Error = new ApiError
                 {
                     Code = "500",
@@ -60,40 +64,43 @@ public class Controller : ControllerBase
     }
 
     [HttpGet("GetById/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetById(int id)
     {
         try
         {
-            _logger.LogInformation("GetById  started for Id: {Id}", id);
+            _logger.LogInformation("GetById Category started for Id: {Id}", id);
 
             var item = await _service.GetByIdAsync(id);
 
             if (item == null)
             {
-                _logger.LogWarning(" not found for Id: {Id}", id);
+                _logger.LogWarning("Category not found for Id: {Id}", id);
 
                 return NotFound(new ApiResponse<string>
                 {
                     Success = false,
-                    Message = " not found"
+                    Message = "Category not found"
                 });
             }
 
-            return Ok(new ApiResponse<Dto>
+            return Ok(new ApiResponse<CategoryDto>
             {
                 Success = true,
-                Message = " retrieved successfully",
+                Message = "Category retrieved successfully",
                 Data = item
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in GetById  for Id: {Id}", id);
+            _logger.LogError(ex, "Error in GetById Category for Id: {Id}", id);
 
             return StatusCode(500, new ApiResponse<string>
             {
                 Success = false,
-                Message = "Error retrieving ",
+                Message = "Error retrieving Category",
                 Error = new ApiError
                 {
                     Code = "500",
@@ -103,32 +110,40 @@ public class Controller : ControllerBase
         }
     }
 
-    [HttpPost("Create")]
-    public async Task<IActionResult> Create(Dto dto)
+    [HttpPost("Create")] 
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Create([FromBody] CategoryDto dto)
     {
         try
         {
-            _logger.LogInformation("Create  started");
+            _logger.LogInformation("Create Category started");
 
             var result = await _service.AddAsync(dto);
 
-            _logger.LogInformation("Create  completed");
+            _logger.LogInformation("Create Category completed");
 
-            return Ok(new ApiResponse<Dto>
-            {
-                Success = true,
-                Message = " created successfully",
-                Data = result
-            });
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = result.Id },
+                new ApiResponse<CategoryDto>
+                {
+                    Success = true,
+                    Message = "Category created successfully",
+                    Data = result
+                });
+
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in Create ");
+            _logger.LogError(ex, "Error in Create Category");
 
             return StatusCode(500, new ApiResponse<string>
             {
                 Success = false,
-                Message = "Error creating ",
+                Message = "Error creating Category",
                 Error = new ApiError
                 {
                     Code = "500",
@@ -138,12 +153,16 @@ public class Controller : ControllerBase
         }
     }
 
-    [HttpPut("Update/{id}")]
-    public async Task<IActionResult> Update(Dto dto, int id)
+    [HttpPut("Update/{id}")] 
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Update(int id, [FromBody] CategoryDto dto)
     {
         try
         {
-            _logger.LogInformation("Update  started for Id: {Id}", id);
+            _logger.LogInformation("Update Category started for Id: {Id}", id);
 
             dto.Id = id;
 
@@ -151,29 +170,29 @@ public class Controller : ControllerBase
 
             if (!updated)
             {
-                _logger.LogWarning("Update failed -  not found for Id: {Id}", id);
+                _logger.LogWarning("Update failed - Category not found for Id: {Id}", id);
 
                 return NotFound(new ApiResponse<string>
                 {
                     Success = false,
-                    Message = " not found"
+                    Message = "Category not found"
                 });
             }
 
             return Ok(new ApiResponse<string>
             {
                 Success = true,
-                Message = " updated successfully"
+                Message = "Category updated successfully"
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in Update  for Id: {Id}", id);
+            _logger.LogError(ex, "Error in Update Category for Id: {Id}", id);
 
             return StatusCode(500, new ApiResponse<string>
             {
                 Success = false,
-                Message = "Error updating ",
+                Message = "Error updating Category",
                 Error = new ApiError
                 {
                     Code = "500",
@@ -184,39 +203,42 @@ public class Controller : ControllerBase
     }
 
     [HttpDelete("Delete/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            _logger.LogInformation("Delete  started for Id: {Id}", id);
+            _logger.LogInformation("Delete Category started for Id: {Id}", id);
 
             var deleted = await _service.DeleteAsync(id);
 
             if (!deleted)
             {
-                _logger.LogWarning("Delete failed -  not found for Id: {Id}", id);
+                _logger.LogWarning("Delete failed - Category not found for Id: {Id}", id);
 
                 return NotFound(new ApiResponse<string>
                 {
                     Success = false,
-                    Message = " not found"
+                    Message = "Category not found"
                 });
             }
 
             return Ok(new ApiResponse<string>
             {
                 Success = true,
-                Message = " deleted successfully"
+                Message = "Category deleted successfully"
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in Delete  for Id: {Id}", id);
+            _logger.LogError(ex, "Error in Delete Category for Id: {Id}", id);
 
             return StatusCode(500, new ApiResponse<string>
             {
                 Success = false,
-                Message = "Error deleting ",
+                Message = "Error deleting Category",
                 Error = new ApiError
                 {
                     Code = "500",
@@ -225,11 +247,44 @@ public class Controller : ControllerBase
             });
         }
     }
-    [HttpGet("paged")]
-    public async Task<IActionResult> GetAllPaged([FromQuery]PagedRequestDto request)
+    [HttpGet("GetAllPaged")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAllPaged([FromQuery] CategorySearchDto request)
     {
-        var result =   await _service.GetAllPagedAsync(request);
-        return Ok(result);
-    }
+        try
+        {
+            _logger.LogInformation(
+                "GetAllPaged Category started PageNumber:{PageNumber}, PageSize:{PageSize}",
+                request.PageNumber,
+                request.PageSize);
+            var result = await _service.GetAllPagedAsync(request);
+           
+            return Ok(new ApiResponse<PagedResultDto<CategoryDto>>
+            {
+                Success = true,
+                Message = "Category retrieved successfully",
+                Data = result
+            });
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex,
+                "Error in GetAllPaged Category");
 
+            return StatusCode(500,
+                new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "Error retrieving Category",
+                    Error = new ApiError
+                    {
+                        Code = "500",
+                        Details = ex.Message
+                    }
+                });
+        }
+    }
 }
