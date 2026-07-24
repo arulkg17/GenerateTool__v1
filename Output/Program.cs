@@ -40,6 +40,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
 var conn = builder.Configuration.GetConnectionString("DefaultConnection")
            ?? "Server=LAPTOP-BIG8QIRC\SQL2025;Database=ArulTestInvoiceDb;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;";
 

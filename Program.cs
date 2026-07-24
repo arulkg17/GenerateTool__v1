@@ -221,7 +221,7 @@ var outputEntities = Path.Combine(outputDir, "Entities");
 var outputData = Path.Combine(outputDir, "Data");
 var outputDto = Path.Combine(outputDir, "DTOs");
 var outputContracts = Path.Combine(outputDir, "Contracts");
-var outputRepository = Path.Combine(outputDir, "Repository");
+var outputRepository = Path.Combine(outputDir, "Repositories");
 var outputServices = Path.Combine(outputDir, "Services");
 var outputMapper = Path.Combine(outputDir, "Mapper");
 var outputModels = Path.Combine(outputDir, "Models");
@@ -291,7 +291,7 @@ File.WriteAllText(loginjwtcontrollerfilePath, loginjwtcontrollerCode);
 
 var programfilePathh = Path.Combine(outputDir,$"Program.cs");
 File.WriteAllText(programfilePathh,programCode);
-var appSettingsfilePath = Path.Combine(outputDir,$"appSettings.json");
+var appSettingsfilePath = Path.Combine(outputDir,$"appsettings.json");
 File.WriteAllText(appSettingsfilePath, appSettingsCode);
 var launchSettingsfilepath = Path.Combine(outputDir, $"launchSettings.json");
 File.WriteAllText(launchSettingsfilepath, launchSettingsCode);
