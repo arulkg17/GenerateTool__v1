@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>{{settings.namespace}}.BAL</RootNamespace>
+    <AssemblyName>{{settings.namespace}}.BAL</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\{{settings.namespace}}.Contracts\{{settings.namespace}}.Contracts.csproj" />
+    <ProjectReference Include="..\{{settings.namespace}}.DAL\{{settings.namespace}}.DAL.csproj" />
+    <ProjectReference Include="..\{{settings.namespace}}.DTO\{{settings.namespace}}.DTO.csproj" />
+  </ItemGroup>
+
+</Project>

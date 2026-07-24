@@ -1,11 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Data.Common;
+using System.Text.Json.Serialization;
 
 namespace GeneratorTool.Models
 {
     public class GeneratorSettings
     {
         public string ProjectName { get; set; } = string.Empty;
-
+        [JsonPropertyName("namespace")]
         public string Namespace { get; set; } = string.Empty;
 
         public string Database { get; set; } = string.Empty;
@@ -29,5 +30,34 @@ namespace GeneratorTool.Models
         public bool UseCQRS { get; set; }
 
         public bool UseStoredProcedure { get; set; }
+        [JsonPropertyName("apititle")]
+
+        public string ApiTitle { get; set; } = string.Empty;
+        [JsonPropertyName("dbserver")]
+        public string DbServer { get; set; } = string.Empty;
+        [JsonPropertyName("dbname")]
+
+        public string DbName { get; set; } = string.Empty;
+        [JsonPropertyName("jwtkey")]
+        public string JwtKey { get; set; } = string.Empty;
+
+        [JsonPropertyName("jwtissuer")]
+        public string JwtIssuer { get; set; } = string.Empty;
+
+        [JsonPropertyName("jwtexpiryminutes")]
+        public int JwtExpiryminutes { get; set; }
+
+        [JsonPropertyName("adminusername")]
+        public string AdminUsername { get; set; } = string.Empty;
+
+        [JsonPropertyName("adminpassword")]
+        public string AdminPassword { get; set; } = string.Empty;
+
+        [JsonPropertyName("port")]
+        public int Port { get; set; }
+
+        [JsonPropertyName("angularorigin")]
+        public string AngularOrigin { get; set; } = string.Empty;
+    
     }
 }

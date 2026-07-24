@@ -2,41 +2,53 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using <Your Namespace>.DTOs;
+using InvoiceManagement.DTOs;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace <Your Namespace>.Controllers;
+namespace InvoiceManagement.Controllers;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("1.0")]
 public class LoginJwtController : ControllerBase
 {
-    private readonly ILogger<LoginController> _logger;
+    private readonly ILogger<LoginJwtController> _logger;
     private readonly IConfiguration _configuration;
 
-    public LoginController(
-        ILogger<LoginController> logger,
-        IConfiguration configuration)
-    {
-        _logger = logger;
-        _configuration = configuration;
-    }
+    public LoginJwtController(
+            ILogger<LoginJwtController> logger,
+            IConfiguration configuration)
+        {
+            _logger = logger;
+            _configuration = configuration;
+        }
 
     [AllowAnonymous]
     [HttpPost("Login")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
         try
         {
+            _logger.LogInformation("Generating JWT token...");
+
             _logger.LogInformation("Login attempt for user: {UserName}", dto.UserName);
 
             if (!ModelState.IsValid)
-                return BadRequest();
+            {
+                return BadRequest(new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "Invalid request"
+                });
+            }
 
-            HttpContext.Session.SetString("MyTest", "My set value test");
+            //HttpContext.Session.SetString("MyTest", "My set value test");
 
             var configUsername = _configuration["UserCredentials:Username"];
             var configPassword = _configuration["UserCredentials:Password"];
@@ -44,7 +56,11 @@ public class LoginJwtController : ControllerBase
             if (dto.UserName != configUsername || dto.Password != configPassword)
             {
                 _logger.LogWarning("Invalid login attempt for user: {UserName}", dto.UserName);
-                return Unauthorized();
+                return Unauthorized(new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "Invalid username or password"
+                });
             }
 
             var jwtKey = _configuration["Jwt:Key"];
@@ -57,6 +73,8 @@ public class LoginJwtController : ControllerBase
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, dto.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, dto.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, dto.UserName),
                 new Claim(ClaimTypes.Role, "Admin"),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
@@ -67,7 +85,7 @@ public class LoginJwtController : ControllerBase
 
             var token = new JwtSecurityToken(
                 issuer: jwtIssuer,
-                audience: null,
+                audience: _configuration["Jwt:Audience"],
                 claims: claims,
                 expires: expiry,
                 signingCredentials: creds
@@ -77,20 +95,31 @@ public class LoginJwtController : ControllerBase
 
             _logger.LogInformation("Login successful for user: {UserName}", dto.UserName);
 
-            return Ok(new
+            return Ok(new ApiResponse<LoginResponseDto>
             {
-                token = jwt,
-                expiration = expiry
+                Success = true,
+                Message = "Login successful",
+                Data = new LoginResponseDto
+                {
+                    Token = jwt,
+                    Expiration = expiry
+                }
             });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error occurred during login");
 
-            return StatusCode(500, new
+            return StatusCode(StatusCodes.Status500InternalServerError,
+            new ApiResponse<string>
             {
-                message = "Login failed",
-                error = ex.Message
+                Success = false,
+                Message = "Login failed",
+                Error = new ApiError
+                {
+                    Code = "500",
+                    Details = ex.Message
+                }
             });
         }
     }

@@ -26,49 +26,13 @@ EXEC [dbo].[sp_Category_Insert]
 GO
 
 
-PRINT 'Insert Record 2';
+PRINT 'Insert Record 0';
 
 EXEC [dbo].[sp_Category_Insert]
 
-    @Code = 'Test Code 2',
-    @Name = 'Test Name 2',
-    @Description = 'Test Description 2',
-    @IsActive = 1
-
-GO
-
-
-PRINT 'Insert Record 3';
-
-EXEC [dbo].[sp_Category_Insert]
-
-    @Code = 'Test Code 3',
-    @Name = 'Test Name 3',
-    @Description = 'Test Description 3',
-    @IsActive = 1
-
-GO
-
-
-PRINT 'Insert Record 4';
-
-EXEC [dbo].[sp_Category_Insert]
-
-    @Code = 'Test Code 4',
-    @Name = 'Test Name 4',
-    @Description = 'Test Description 4',
-    @IsActive = 1
-
-GO
-
-
-PRINT 'Insert Record 5';
-
-EXEC [dbo].[sp_Category_Insert]
-
-    @Code = 'Test Code 5',
-    @Name = 'Test Name 5',
-    @Description = 'Test Description 5',
+    @Code = 'Test Code 0',
+    @Name = 'Test Name 0',
+    @Description = 'Test Description 0',
     @IsActive = 1
 
 GO

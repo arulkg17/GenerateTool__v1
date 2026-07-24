@@ -3,8 +3,21 @@
     "namespace": "InvoiceManagement",
     "projectName": "InvoiceManagement.Api",
     "database": "InvoiceDb",
-    "provider": "SqlServer"
+    "provider": "SqlServer",
+    "apititle": "Invoice Management API V1",
+    "dbserver": "LAPTOP-BIG8QIRC\\SQL2025",
+    "dbname": "ArulTestInvoiceDb",
+    "angularorigin": "http://localhost:4200",
+    "jwtkey": "v2UJQxTrwUCqqJkehkxvSUZKQCX6gNmRWq7q1bWa3Jw=",
+    "jwtissuer": "yourapiissuer",
+    "jwtexpiryminutes": 60,
+    "adminusername": "admin",
+    "adminpassword": "password",
+    "port": 5031
   },
+  "tables": [
+    { "name": "Category" }
+  ],
   "tablename": "Category",
   "entityname": "CategoryEntity",
   "dbsetname": "Categories",

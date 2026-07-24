@@ -1,0 +1,5 @@
+{{~ for proj in newprojects ~}}
+{{~ if proj.parentfoldeguid ~}}
+		{{ proj.projectguid }} = {{ proj.parentfoldeguid }}
+{{~ end ~}}
+{{~ end ~}}

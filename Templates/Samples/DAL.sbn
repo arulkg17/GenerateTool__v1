@@ -1,0 +1,24 @@
+﻿using System.Reflection;
+
+< Project Sdk = "Microsoft.NET.Sdk" >
+
+  < PropertyGroup >
+    < TargetFramework > net10.0 </ TargetFramework >
+    < ImplicitUsings > enable </ ImplicitUsings >
+    < Nullable > enable </ Nullable >
+    < RootNamespace >{{settings.namespace}}.DAL </ RootNamespace >
+    < AssemblyName >{{settings.namespace}}.DAL </ AssemblyName >
+  </ PropertyGroup >
+
+  < ItemGroup >
+    < PackageReference Include = "Microsoft.EntityFrameworkCore" Version = "10.0.0" />
+    < PackageReference Include = "Microsoft.EntityFrameworkCore.SqlServer" Version = "10.0.0" />
+    < PackageReference Include = "Microsoft.EntityFrameworkCore.Relational" Version = "10.0.0" />
+  </ ItemGroup >
+
+  < ItemGroup >
+    < ProjectReference Include = "..\{{settings.namespace}}.Contracts\{{settings.namespace}}.Contracts.csproj" />
+    < ProjectReference Include = "..\{{settings.namespace}}.Entities\{{settings.namespace}}.Entities.csproj" />
+  </ ItemGroup >
+   
+</ Project >

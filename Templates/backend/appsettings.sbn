@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server={{db_server}};Database={{db_name}};Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;"
+    "DefaultConnection": "Server={{settings.dbserver}};Database={{settings.dbname}};Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;"
   },
   "Logging": {
     "LogLevel": {
@@ -10,12 +10,12 @@
   },
   "AllowedHosts": "*",
   "Jwt": {
-    "Key": "{{jwt_key}}",
-    "Issuer": "{{jwt_issuer}}",
-    "ExpiryMinutes": {{jwt_expiry}}
+    "Key": "{{settings.jwtkey}}",
+    "Issuer": "{{settings.jwtissuer}}",
+    "ExpiryMinutes": {{settings.jwtexpiryminutes}}
   },
   "UserCredentials": {
-    "Username": "{{username}}",
-    "Password": "{{password}}"
+    "Username": "{{settings.adminusername}}",
+    "Password": "{{settings.adminpassword}}"
   }
 }

@@ -1,0 +1,85 @@
+using {{settings.namespace}}.Contracts;
+using {{settings.namespace}}.DTO;
+using {{settings.namespace}}.Entities;
+
+namespace {{settings.namespace}}.BAL;
+
+public class {{tablename}}Service : I{{tablename}}Service
+{
+    private readonly I{{tablename}}Repository _repository;
+
+    public {{tablename}}Service(I{{tablename}}Repository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<IEnumerable<{{tablename}}Dto>> GetAllAsync()
+    {
+        var entities = await _repository.GetAllAsync();
+        return entities.Select(MapToDto);
+    }
+
+    public async Task<{{tablename}}Dto?> GetByIdAsync(int id)
+    {
+        var entity = await _repository.GetByIdAsync(id);
+        return entity == null ? null : MapToDto(entity);
+    }
+
+    public async Task<int> AddAsync({{tablename}}Dto dto)
+    {
+        var entity = MapToEntity(dto);
+        return await _repository.AddAsync(entity);
+    }
+
+    public async Task<bool> UpdateAsync({{tablename}}Dto dto)
+    {
+        var entity = MapToEntity(dto);
+        return await _repository.UpdateAsync(entity);
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        return await _repository.DeleteAsync(id);
+    }
+
+    public async Task<(IEnumerable<{{tablename}}Dto> Data, int TotalRecords)> GetAllPagedAsync(
+{{~ for col in columns ~}}
+{{~ if col.filterable ~}}
+        string? {{ col.name | string.downcase }},
+{{~ end ~}}
+{{~ end ~}}
+        int pageNumber,
+        int pageSize)
+    {
+        var result = await _repository.GetAllPagedAsync(
+{{~ for col in columns ~}}
+{{~ if col.filterable ~}}
+            {{ col.name | string.downcase }},
+{{~ end ~}}
+{{~ end ~}}
+            pageNumber,
+            pageSize);
+
+        return (result.Data.Select(MapToDto), result.TotalRecords);
+    }
+
+    private static {{tablename}}Dto MapToDto({{tablename}}Entity entity)
+    {
+        return new {{tablename}}Dto
+        {
+{{~ for col in columns ~}}
+            {{ col.name }} = entity.{{ col.name }},
+{{~ end ~}}
+        };
+    }
+
+    private static {{tablename}}Entity MapToEntity({{tablename}}Dto dto)
+    {
+        return new {{tablename}}Entity
+        {
+{{~ for col in columns ~}}
+            {{ col.name }} = dto.{{ col.name }},
+{{~ end ~}}
+        };
+    }
+}

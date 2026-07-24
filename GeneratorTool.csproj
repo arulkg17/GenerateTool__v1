@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Templates\model.sbn" />
+    <Compile Remove="Templates\Samples\SolutionUpdater.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Templates\backend\model.sbn">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Remove="Templates\model.sbn" />
+    <None Remove="Templates\Samples\BAL.sbn" />
+    <None Remove="Templates\Samples\DAL.sbn" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,7 +25,14 @@
   <ItemGroup>
     <Folder Include="Services\" />
     <Folder Include="Templates\angular\" />
+    <Folder Include="Templates\Backend\Models\" />
     <Folder Include="Templates\react\" />
   </ItemGroup>
 
+  <ItemGroup>
+	<Compile Remove="Output\**\*.cs" />
+	<EmbeddedResource Remove="Output\**\*" />
+	<None Include="Output\**\*" />
+ </ItemGroup>
+	
 </Project>

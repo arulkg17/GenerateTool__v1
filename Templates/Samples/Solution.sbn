@@ -1,0 +1,34 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.10000.0
+MinimumVisualStudioVersion = 10.0.40219.1
+{{~ for proj in projects ~}}
+Project("{{ proj.typeguid }}") = "{{ proj.name }}", "{{ proj.relativepath }}", "{{ proj.projectguid }}"
+EndProject
+{{~ end ~}}
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+{{~ for proj in projects ~}}
+{{~ if proj.buildable ~}}
+		{{ proj.projectguid }}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{{ proj.projectguid }}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{{ proj.projectguid }}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{{ proj.projectguid }}.Release|Any CPU.Build.0 = Release|Any CPU
+{{~ end ~}}
+{{~ end ~}}
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+{{~ for proj in projects ~}}
+{{~ if proj.parentfoldeguid ~}}
+		{{ proj.projectguid }} = {{ proj.parentfoldeguid }}
+{{~ end ~}}
+{{~ end ~}}
+	EndGlobalSection
+EndGlobal

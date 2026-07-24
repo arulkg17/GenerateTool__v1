@@ -20,6 +20,12 @@ public class TableSchema
     public TestData TestData { get; set; } = new();
     [JsonPropertyName("dbsetname")]
     public string DbSetName { get; set; } = string.Empty;
+    [JsonPropertyName("apititle")]
+    public string ApiTitle { get; set; } = string.Empty;
+    [JsonPropertyName("dbname")]
+    public string Dbname { get; set; } = string.Empty;
+    [JsonPropertyName("tables")]
+    public List<TableSchema> Tables { get; set; } = new();
 
 }
 

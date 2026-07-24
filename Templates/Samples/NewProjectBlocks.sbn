@@ -1,0 +1,4 @@
+{{~ for proj in newprojects ~}}
+Project("{{ proj.typeguid }}") = "{{ proj.name }}", "{{ proj.relativepath }}", "{{ proj.projectguid }}"
+EndProject
+{{~ end ~}}

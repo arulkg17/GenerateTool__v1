@@ -1,0 +1,21 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server={{settings.dbserver}};Database={{settings.dbname}};Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "Jwt": {
+    "Key": "{{settings.jwtkey}}",
+    "Issuer": "{{settings.jwtissuer}}",
+    "ExpiryMinutes": {{settings.jwtexpiryminutes}}
+  },
+  "UserCredentials": {
+    "Username": "{{settings.adminusername}}",
+    "Password": "{{settings.adminpassword}}"
+  }
+}
