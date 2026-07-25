@@ -5,11 +5,19 @@ using Scriban;
 using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 var rootPath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName;
 
 var outputDir = Path.Combine(rootPath, "Output");
+var generationResult = new GenerationResult
+{
+    OutputFolder = outputDir,
+    GeneratedDate = DateTime.Now,
+    Files = new List<GeneratedFile>()
+};
 
+var generatedFiles = new List<GeneratedFile>();
 try
 {
     if (Directory.Exists(outputDir))
@@ -134,17 +142,17 @@ var templateModel = new TemplateModel
 };
 
 
-Console.WriteLine($"TestData is null: {schema.TestData == null}");
+//Console.WriteLine($"TestData is null: {schema.TestData == null}");
 
-if (schema.TestData != null)
-{
-    Console.WriteLine($"Enabled: {schema.TestData.Enabled}");
-    Console.WriteLine($"RecordCount: {schema.TestData.RecordCount}");
-}
+//if (schema.TestData != null)
+//{
+//    Console.WriteLine($"Enabled: {schema.TestData.Enabled}");
+//    Console.WriteLine($"RecordCount: {schema.TestData.RecordCount}");
+//}
 
 
 
-Console.WriteLine(templateModel.StoredProcedures.GetAllPaged);
+//Console.WriteLine(templateModel.StoredProcedures.GetAllPaged);
 
 // Template Render Service
 var templateRender = new TemplateRenderService();
@@ -189,69 +197,90 @@ var outputWriter = new OutputWriterService();
 // Database 
 var outputDatabase = Path.Combine(outputDir, "Database");
 var tableSPfilePath = Path.Combine(outputDatabase, $"{schema.TableName}DbScript.sql");
-outputWriter.WriteFile(tableSPfilePath,tableSpCode);
+generationResult.Files.Add(outputWriter.WriteFile(tableSPfilePath,tableSpCode));
+
 var tableTestSpFilePath = Path.Combine(outputDatabase, $"{schema.TableName}TestSpScript.sql");
-outputWriter.WriteFile(tableTestSpFilePath, tableTestSpCode);
+generationResult.Files.Add(outputWriter.WriteFile(tableTestSpFilePath, tableTestSpCode));
+
 //Entities
 var outputEntities = Path.Combine(outputDir, "Entities");
 var entityfilePath = Path.Combine(outputEntities, $"{schema.TableName}Entity.cs");
-outputWriter.WriteFile(entityfilePath, entityCode);
+generationResult.Files.Add(outputWriter.WriteFile(entityfilePath, entityCode));
 
 var outputData = Path.Combine(outputDir, "Data");
 var appdbcontextfilePath = Path.Combine(outputData, $"AppDbContext.cs");
-outputWriter.WriteFile(appdbcontextfilePath, appDbContextCode);
+generationResult.Files.Add(outputWriter.WriteFile(appdbcontextfilePath, appDbContextCode));
 //Dto
 var outputDto = Path.Combine(outputDir, "DTOs");
 var dtofilePath = Path.Combine(outputDto, $"{schema.TableName}Dto.cs");
-outputWriter.WriteFile(dtofilePath, dtoCode);
+generationResult.Files.Add(outputWriter.WriteFile(dtofilePath, dtoCode));
 
 var searchDtofilePath = Path.Combine(outputDto, $"{schema.TableName}SearchDto.cs");
-outputWriter.WriteFile(searchDtofilePath, searchDtoCode);
+generationResult.Files.Add(outputWriter.WriteFile(searchDtofilePath, searchDtoCode));
 
 var pagedResultDtofilePath = Path.Combine(outputDto, $"PagedResultDto.cs");
-outputWriter.WriteFile(pagedResultDtofilePath, pagedResultDtoCode);
+generationResult.Files.Add(outputWriter.WriteFile(pagedResultDtofilePath, pagedResultDtoCode));
 //Contracts
 var outputContracts = Path.Combine(outputDir, "Contracts");
 var irepofilePath = Path.Combine(outputContracts, $"I{schema.TableName}Repository.cs");
-outputWriter.WriteFile(irepofilePath, irepoCode);
+generationResult.Files.Add(outputWriter.WriteFile(irepofilePath, irepoCode));
 var iservicefilePath = Path.Combine(outputContracts, $"I{schema.TableName}Service.cs");
-outputWriter.WriteFile(iservicefilePath, iserviceCode);
+generationResult.Files.Add(outputWriter.WriteFile(iservicefilePath, iserviceCode));
 //Repository
 var outputRepository = Path.Combine(outputDir, "Repositories");
 var baseRepofilePath = Path.Combine(outputRepository, $"BaseRepository.cs");
-outputWriter.WriteFile(baseRepofilePath, baseRepoCode);
+generationResult.Files.Add(outputWriter.WriteFile(baseRepofilePath, baseRepoCode));
 var repofilePath = Path.Combine(outputRepository, $"{schema.TableName}RepositoryEF.cs");
-outputWriter.WriteFile(repofilePath, repoCode);
+generationResult.Files.Add(outputWriter.WriteFile(repofilePath, repoCode));
 //Service
 var outputServices = Path.Combine(outputDir, "Services");
 var servicefilePath = Path.Combine(outputServices, $"{schema.TableName}ServiceEF.cs");
-outputWriter.WriteFile(servicefilePath, serviceCode);
+generationResult.Files.Add(outputWriter.WriteFile(servicefilePath, serviceCode));
 //Mapper
 var outputMapper = Path.Combine(outputDir, "Mapper");
 var autoMapperfilePath = Path.Combine(outputMapper, $"{schema.TableName}Profile.cs");
-outputWriter.WriteFile(autoMapperfilePath, autoMapperCode);
+generationResult.Files.Add(outputWriter.WriteFile(autoMapperfilePath, autoMapperCode));
 //Models
 var outputModels = Path.Combine(outputDir, "Models");
 var apiResponsefilePath = Path.Combine(outputModels, $"ApiResponse.cs");
-outputWriter.WriteFile(apiResponsefilePath, apiResponseCode);
+generationResult.Files.Add(outputWriter.WriteFile(apiResponsefilePath, apiResponseCode));
 var apiErrorfilePath = Path.Combine(outputModels, $"ApiError.cs");
-outputWriter.WriteFile(apiErrorfilePath, apiErrorCode);
+generationResult.Files.Add(outputWriter.WriteFile(apiErrorfilePath, apiErrorCode));
 //Controllers
 var outputControllers = Path.Combine(outputDir, "Controllers");
 var controllerfilePath = Path.Combine(outputControllers, $"{schema.TableName}Controller.cs");
-outputWriter.WriteFile(controllerfilePath, controllerCode);
+generationResult.Files.Add(outputWriter.WriteFile(controllerfilePath, controllerCode));
 var loginjwtcontrollerfilePath = Path.Combine(outputControllers, $"LoginJwtController.cs");
-outputWriter.WriteFile(loginjwtcontrollerfilePath, loginjwtcontrollerCode);
+generationResult.Files.Add(outputWriter.WriteFile(loginjwtcontrollerfilePath, loginjwtcontrollerCode));
 //Other Root files 
 var programfilePathh = Path.Combine(outputDir, $"Program.cs");
-outputWriter.WriteFile(programfilePathh, programCode);
+generationResult.Files.Add(outputWriter.WriteFile(programfilePathh, programCode));
 var appSettingsfilePath = Path.Combine(outputDir, $"appsettings.json");
-outputWriter.WriteFile(appSettingsfilePath, appSettingsCode);
+generationResult.Files.Add(outputWriter.WriteFile(appSettingsfilePath, appSettingsCode));
 var launchSettingsfilepath = Path.Combine(outputDir, $"launchSettings.json");
-outputWriter.WriteFile(launchSettingsfilepath, launchSettingsCode);
+generationResult.Files.Add(outputWriter.WriteFile(launchSettingsfilepath, launchSettingsCode));
 var projectfilePath = Path.Combine(outputDir, $"{generatorSchema.Settings.ProjectName}.csproj");
-outputWriter.WriteFile(projectfilePath, projectCode);
+generationResult.Files.Add(outputWriter.WriteFile(projectfilePath, projectCode));
 
+Console.WriteLine("=========================");
+Console.WriteLine("Generation Result");
+Console.WriteLine("=========================");
+
+Console.WriteLine(
+    $"Output Folder : {generationResult.OutputFolder}");
+
+Console.WriteLine(
+    $"Generated Files : {generationResult.Files.Count}");
+
+foreach (var file in generationResult.Files)
+{
+    Console.WriteLine(
+        $"{file.FileName} - {file.FileSize} bytes");
+}
+
+//Report Generation Service
+var reportService = new GenerationReportService();
+reportService.CreateReport( outputDir, generationResult.Files);
 
 Console.WriteLine("File generated successfully!");
 

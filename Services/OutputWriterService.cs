@@ -1,4 +1,5 @@
-﻿using GeneratorTool.Services.Interfaces;
+﻿using GeneratorTool.Models;
+using GeneratorTool.Services.Interfaces;
 
 namespace GeneratorTool.Services;
 public class OutputWriterService : IOutputWriterService
@@ -11,8 +12,7 @@ public class OutputWriterService : IOutputWriterService
         }
     }
 
-
-    public void WriteFile(string filePath, string content)
+    public GeneratedFile WriteFile(string filePath, string content)
     {
 
         var directory = Path.GetDirectoryName(filePath);
@@ -23,5 +23,17 @@ public class OutputWriterService : IOutputWriterService
         }
 
         File.WriteAllText(filePath, content);
+
+        var fileInfo = new FileInfo(filePath);
+
+        return new GeneratedFile
+        {
+            FileName = fileInfo.Name,
+            FilePath = fileInfo.FullName,
+            FileSize = fileInfo.Length,
+            GeneratedDate = DateTime.Now
+        };
+
     }
+
 }
