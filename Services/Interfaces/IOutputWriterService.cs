@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+namespace GeneratorTool.Services.Interfaces;
 
-namespace GeneratorTool.Services.Interfaces
+public interface IOutputWriterService
 {
-    public interface IOutputWriterService
-    {
-    }
+    void CreateDirectory(string path);
+    void WriteFile(string filePath, string content);
 }

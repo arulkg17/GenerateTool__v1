@@ -143,53 +143,6 @@ if (schema.TestData != null)
 }
 
 
-//Console.WriteLine("Table : " + schema.TableName);
-
-//Console.WriteLine(schema.StoredProcedures == null
-//    ? "StoredProcedures = NULL"
-//    : "StoredProcedures Loaded");
-
-
-
-//if (schema.StoredProcedures != null)
-//{
-//    Console.WriteLine("Insert      : " + schema.StoredProcedures.Insert);
-//    Console.WriteLine("Update      : " + schema.StoredProcedures.Update);
-//    Console.WriteLine("Delete      : " + schema.StoredProcedures.Delete);
-//    Console.WriteLine("GetById     : " + schema.StoredProcedures.GetById);
-//    Console.WriteLine("GetAll      : " + schema.StoredProcedures.GetAll);
-//    Console.WriteLine("GetAllPaged : " + schema.StoredProcedures.GetAllPaged);
-//}
-//Console.ReadLine();
-
-
-string GenerateCode(string templatePath, object model)
-{
-    var templateText = File.ReadAllText(templatePath);
-    var template = Template.Parse(templateText);
-   
-
-   // Console.WriteLine($"Processing Template : {templatePath}");
-
-    //if (template.HasErrors)
-    //{
-    //    Console.WriteLine("================================");
-    //    Console.WriteLine("Template Parsing Error");
-    //    Console.WriteLine($"File : {templatePath}");
-    //    Console.WriteLine("================================");
-
-    //    foreach (var message in template.Messages)
-    //    {
-    //        Console.WriteLine(message);
-    //    }
-
-    //    Console.WriteLine("================================");
-
-    //    throw new Exception("Template parsing failed");
-    //}
-    Console.Write("Table Name = '" + templateModel.TableName.ToLowerInvariant());
-    return template.Render(model, member => member.Name.ToLower());
-}
 
 Console.WriteLine(templateModel.StoredProcedures.GetAllPaged);
 
@@ -231,91 +184,73 @@ var angularServiceCode = templateRender.Render(tmplAngularServicePath, templateM
 
 // Write file
 
+var outputWriter = new OutputWriterService();
+
+// Database 
 var outputDatabase = Path.Combine(outputDir, "Database");
-var outputEntities = Path.Combine(outputDir, "Entities");
-var outputData = Path.Combine(outputDir, "Data");
-var outputDto = Path.Combine(outputDir, "DTOs");
-var outputContracts = Path.Combine(outputDir, "Contracts");
-var outputRepository = Path.Combine(outputDir, "Repositories");
-var outputServices = Path.Combine(outputDir, "Services");
-var outputMapper = Path.Combine(outputDir, "Mapper");
-var outputModels = Path.Combine(outputDir, "Models");
-var outputControllers = Path.Combine(outputDir, "Controllers");
-
-Directory.CreateDirectory(outputDatabase);
-Directory.CreateDirectory(outputEntities);
-Directory.CreateDirectory(outputData);
-Directory.CreateDirectory(outputDto);
-Directory.CreateDirectory(outputContracts);
-Directory.CreateDirectory(outputRepository);
-Directory.CreateDirectory(outputServices);
-Directory.CreateDirectory(outputMapper);
-Directory.CreateDirectory(outputModels);
-Directory.CreateDirectory(outputControllers);
-
-//var modelfilePath = Path.Combine(outputDir, $"{schema.TableName}.cs");
-//File.WriteAllText(modelfilePath, modelCode);
-
 var tableSPfilePath = Path.Combine(outputDatabase, $"{schema.TableName}DbScript.sql");
-File.WriteAllText(tableSPfilePath, tableSpCode);
-
+outputWriter.WriteFile(tableSPfilePath,tableSpCode);
 var tableTestSpFilePath = Path.Combine(outputDatabase, $"{schema.TableName}TestSpScript.sql");
-File.WriteAllText(tableTestSpFilePath, tableTestSpCode);
-
+outputWriter.WriteFile(tableTestSpFilePath, tableTestSpCode);
+//Entities
+var outputEntities = Path.Combine(outputDir, "Entities");
 var entityfilePath = Path.Combine(outputEntities, $"{schema.TableName}Entity.cs");
-File.WriteAllText(entityfilePath, entityCode);
+outputWriter.WriteFile(entityfilePath, entityCode);
 
+var outputData = Path.Combine(outputDir, "Data");
 var appdbcontextfilePath = Path.Combine(outputData, $"AppDbContext.cs");
-File.WriteAllText(appdbcontextfilePath, appDbContextCode);
-
+outputWriter.WriteFile(appdbcontextfilePath, appDbContextCode);
+//Dto
+var outputDto = Path.Combine(outputDir, "DTOs");
 var dtofilePath = Path.Combine(outputDto, $"{schema.TableName}Dto.cs");
-File.WriteAllText(dtofilePath, dtoCode);
+outputWriter.WriteFile(dtofilePath, dtoCode);
 
 var searchDtofilePath = Path.Combine(outputDto, $"{schema.TableName}SearchDto.cs");
-File.WriteAllText(searchDtofilePath, searchDtoCode);
+outputWriter.WriteFile(searchDtofilePath, searchDtoCode);
 
 var pagedResultDtofilePath = Path.Combine(outputDto, $"PagedResultDto.cs");
-File.WriteAllText(pagedResultDtofilePath, pagedResultDtoCode);
-
-var baseRepofilePath = Path.Combine(outputRepository, $"BaseRepository.cs");
-File.WriteAllText(baseRepofilePath, baseRepoCode);
-
+outputWriter.WriteFile(pagedResultDtofilePath, pagedResultDtoCode);
+//Contracts
+var outputContracts = Path.Combine(outputDir, "Contracts");
 var irepofilePath = Path.Combine(outputContracts, $"I{schema.TableName}Repository.cs");
-File.WriteAllText(irepofilePath, irepoCode);
-var repofilePath = Path.Combine(outputRepository, $"{schema.TableName}RepositoryEF.cs");
-File.WriteAllText(repofilePath, repoCode);
-
+outputWriter.WriteFile(irepofilePath, irepoCode);
 var iservicefilePath = Path.Combine(outputContracts, $"I{schema.TableName}Service.cs");
-File.WriteAllText(iservicefilePath, iserviceCode);
+outputWriter.WriteFile(iservicefilePath, iserviceCode);
+//Repository
+var outputRepository = Path.Combine(outputDir, "Repositories");
+var baseRepofilePath = Path.Combine(outputRepository, $"BaseRepository.cs");
+outputWriter.WriteFile(baseRepofilePath, baseRepoCode);
+var repofilePath = Path.Combine(outputRepository, $"{schema.TableName}RepositoryEF.cs");
+outputWriter.WriteFile(repofilePath, repoCode);
+//Service
+var outputServices = Path.Combine(outputDir, "Services");
 var servicefilePath = Path.Combine(outputServices, $"{schema.TableName}ServiceEF.cs");
-File.WriteAllText(servicefilePath, serviceCode);
-
+outputWriter.WriteFile(servicefilePath, serviceCode);
+//Mapper
+var outputMapper = Path.Combine(outputDir, "Mapper");
 var autoMapperfilePath = Path.Combine(outputMapper, $"{schema.TableName}Profile.cs");
-File.WriteAllText(autoMapperfilePath, autoMapperCode);
-
+outputWriter.WriteFile(autoMapperfilePath, autoMapperCode);
+//Models
+var outputModels = Path.Combine(outputDir, "Models");
 var apiResponsefilePath = Path.Combine(outputModels, $"ApiResponse.cs");
-File.WriteAllText(apiResponsefilePath, apiResponseCode);
+outputWriter.WriteFile(apiResponsefilePath, apiResponseCode);
 var apiErrorfilePath = Path.Combine(outputModels, $"ApiError.cs");
-File.WriteAllText(apiErrorfilePath, apiErrorCode);
-
+outputWriter.WriteFile(apiErrorfilePath, apiErrorCode);
+//Controllers
+var outputControllers = Path.Combine(outputDir, "Controllers");
 var controllerfilePath = Path.Combine(outputControllers, $"{schema.TableName}Controller.cs");
-File.WriteAllText(controllerfilePath, controllerCode);
-
+outputWriter.WriteFile(controllerfilePath, controllerCode);
 var loginjwtcontrollerfilePath = Path.Combine(outputControllers, $"LoginJwtController.cs");
-File.WriteAllText(loginjwtcontrollerfilePath, loginjwtcontrollerCode);
-
-var programfilePathh = Path.Combine(outputDir,$"Program.cs");
-File.WriteAllText(programfilePathh,programCode);
-var appSettingsfilePath = Path.Combine(outputDir,$"appsettings.json");
-File.WriteAllText(appSettingsfilePath, appSettingsCode);
+outputWriter.WriteFile(loginjwtcontrollerfilePath, loginjwtcontrollerCode);
+//Other Root files 
+var programfilePathh = Path.Combine(outputDir, $"Program.cs");
+outputWriter.WriteFile(programfilePathh, programCode);
+var appSettingsfilePath = Path.Combine(outputDir, $"appsettings.json");
+outputWriter.WriteFile(appSettingsfilePath, appSettingsCode);
 var launchSettingsfilepath = Path.Combine(outputDir, $"launchSettings.json");
-File.WriteAllText(launchSettingsfilepath, launchSettingsCode);
+outputWriter.WriteFile(launchSettingsfilepath, launchSettingsCode);
 var projectfilePath = Path.Combine(outputDir, $"{generatorSchema.Settings.ProjectName}.csproj");
-File.WriteAllText(projectfilePath, projectCode);
-
-//Test angular file
-//var angularservicefilePath = Path.Combine(outputDir, $"{schema.TableName}Service.cs");
-//File.WriteAllText(angularservicefilePath, angularServiceCode);
+outputWriter.WriteFile(projectfilePath, projectCode);
 
 
 Console.WriteLine("File generated successfully!");

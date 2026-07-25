@@ -1,10 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GeneratorTool.Services.Interfaces;
 
-namespace GeneratorTool.Services
+namespace GeneratorTool.Services;
+public class OutputWriterService : IOutputWriterService
 {
-    public class OutputWriterService
+    public void CreateDirectory(string path)
     {
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+    }
+
+
+    public void WriteFile(string filePath, string content)
+    {
+
+        var directory = Path.GetDirectoryName(filePath);
+
+        if (!string.IsNullOrEmpty(directory))
+        {
+            CreateDirectory(directory);
+        }
+
+        File.WriteAllText(filePath, content);
     }
 }
