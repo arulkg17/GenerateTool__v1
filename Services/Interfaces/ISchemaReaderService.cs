@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GeneratorTool.Models;
 
-namespace GeneratorTool.Services.Interfaces
+namespace GeneratorTool.Services.Interfaces;
+
+public interface ISchemaReaderService
 {
-    public interface ISchemaReaderService
-    {
-    }
+    TableSchema Read(string filePath);
 }

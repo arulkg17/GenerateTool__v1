@@ -92,19 +92,11 @@ if (!Directory.Exists(schemaFolder))
 var selector =  new SchemaSelectorService(schemaFolder);
 var schemaFile =  selector.SelectSchema();
 
-var json = File.ReadAllText(schemaFile);
-var schema = JsonSerializer.Deserialize<TableSchema>(
-    json,
-    new JsonSerializerOptions
-    {
-        PropertyNameCaseInsensitive = true
-    });
+//Schema Reader Service 
+var reader = new SchemaReaderService();
+var schema = reader.Read(schemaFile);
 
-if (schema == null)
-{
-    Console.WriteLine("Invalid JSON Schema");
-    return;
-}
+var json = File.ReadAllText(schemaFile);
 
 Directory.Delete(outputDir, true);
 outputDir = Path.Combine(
@@ -173,10 +165,12 @@ if (schema.TestData != null)
 
 string GenerateCode(string templatePath, object model)
 {
-   // Console.WriteLine($"Processing Template : {templatePath}");
-
     var templateText = File.ReadAllText(templatePath);
     var template = Template.Parse(templateText);
+   
+
+   // Console.WriteLine($"Processing Template : {templatePath}");
+
     //if (template.HasErrors)
     //{
     //    Console.WriteLine("================================");
@@ -199,39 +193,41 @@ string GenerateCode(string templatePath, object model)
 
 Console.WriteLine(templateModel.StoredProcedures.GetAllPaged);
 
+// Template Render Service
+var templateRender = new TemplateRenderService();
 
-var tableSpCode = GenerateCode(tmplDatabasePath, templateModel);
-var tableTestSpCode = GenerateCode(tmplDbTestScriptPath, templateModel);
+var tableSpCode = templateRender.Render(tmplDatabasePath, templateModel);
+var tableTestSpCode = templateRender.Render(tmplDbTestScriptPath, templateModel);
 
-var entityCode = GenerateCode(tmplEntityPath, templateModel);
-var dtoCode = GenerateCode(tmplDtoPath, templateModel);
-var searchDtoCode = GenerateCode(tmplSearchDtoPath, templateModel);
-var pagedResultDtoCode = GenerateCode(tmplPagedResultDtopath, templateModel);
+var entityCode = templateRender.Render(tmplEntityPath, templateModel);
+var dtoCode = templateRender.Render(tmplDtoPath, templateModel);
+var searchDtoCode = templateRender.Render(tmplSearchDtoPath, templateModel);
+var pagedResultDtoCode = templateRender.Render(tmplPagedResultDtopath, templateModel);
 //var modelCode = GenerateCode(tmplModelPath, templateModel);
-var appDbContextCode = GenerateCode(tmplAppDbContextPath, templateModel);
+var appDbContextCode = templateRender.Render(tmplAppDbContextPath, templateModel);
 
-var baseRepoCode = GenerateCode(tmplBaseRepoPath, templateModel);
+var baseRepoCode = templateRender.Render(tmplBaseRepoPath, templateModel);
 
-var irepoCode = GenerateCode(tmplIRepoPath, templateModel);
-var repoCode = GenerateCode(tmplRepoPath, templateModel);
+var irepoCode = templateRender.Render(tmplIRepoPath, templateModel);
+var repoCode = templateRender.Render(tmplRepoPath, templateModel);
 
-var iserviceCode = GenerateCode(tmplIServicePath, templateModel);
-var serviceCode = GenerateCode(tmplServicePath, templateModel);
+var iserviceCode = templateRender.Render(tmplIServicePath, templateModel);
+var serviceCode = templateRender.Render(tmplServicePath, templateModel);
 
-var autoMapperCode = GenerateCode(tmplAutoMapperPath, templateModel);
+var autoMapperCode = templateRender.Render(tmplAutoMapperPath, templateModel);
 
-var apiResponseCode = GenerateCode(tmplApiResponsePath, templateModel);
-var apiErrorCode = GenerateCode(tmplApiErrorPath, templateModel);
+var apiResponseCode = templateRender.Render(tmplApiResponsePath, templateModel);
+var apiErrorCode = templateRender.Render(tmplApiErrorPath, templateModel);
 
-var controllerCode = GenerateCode(tmplControllerPath, templateModel);
-var loginjwtcontrollerCode = GenerateCode(tmplLoginJwtControllerPath, templateModel);
+var controllerCode = templateRender.Render(tmplControllerPath, templateModel);
+var loginjwtcontrollerCode = templateRender.Render(tmplLoginJwtControllerPath, templateModel);
  
-var programCode = GenerateCode(tmplProgramPath, templateModel);
-var appSettingsCode = GenerateCode(tmplAppSettingsPath, templateModel);
-var launchSettingsCode = GenerateCode(tmplLaunchSettingsPath, templateModel);
-var projectCode = GenerateCode(tmplProjectPath,templateModel);
+var programCode = templateRender.Render(tmplProgramPath, templateModel);
+var appSettingsCode = templateRender.Render(tmplAppSettingsPath, templateModel);
+var launchSettingsCode = templateRender.Render(tmplLaunchSettingsPath, templateModel);
+var projectCode = templateRender.Render(tmplProjectPath,templateModel);
 
-var angularServiceCode = GenerateCode(tmplAngularServicePath, templateModel);
+var angularServiceCode = templateRender.Render(tmplAngularServicePath, templateModel);
 
 // Write file
 

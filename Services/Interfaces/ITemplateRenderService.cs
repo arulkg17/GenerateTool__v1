@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GeneratorTool.Services.Interfaces
+﻿
+namespace GeneratorTool.Services.Interfaces;
+public interface ITemplateRenderService
 {
-    public interface ITemplateRenderService
-    {
-    }
+    string Render(string templatePath, object model);
 }

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+namespace GeneratorTool.Services.Interfaces;
 
-namespace GeneratorTool.Services.Interfaces
+public interface ISchemaSelectorService
 {
-    public interface ISchemaSelectorService
-    {
-        string SelectSchema();
-    }
+    string SelectSchema();
 }

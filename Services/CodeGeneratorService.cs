@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+namespace GeneratorTool.Services;
 
-namespace GeneratorTool.Services
+public class CodeGeneratorService 
 {
-    public class CodeGeneratorService
-    {
-    }
+   
 }
