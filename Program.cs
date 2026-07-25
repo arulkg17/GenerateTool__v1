@@ -80,21 +80,69 @@ var settings = JsonSerializer.Deserialize<GeneratorSettings>(
     File.ReadAllText(Path.Combine(rootPath, "Configuration", "generator.json")));
 
 string tableName = "category";
+
 var schemaFolder = Path.Combine(rootPath, "Schemas");
-var schemaFile = Path.Combine(schemaFolder, $"{tableName}.json");
-if (!File.Exists(schemaFile))
+if (!Directory.Exists(schemaFolder))
 {
-    Console.WriteLine($"Schema file not found: {schemaFile}");
+    Directory.CreateDirectory(schemaFolder);
+}
+
+var schemaFiles = Directory.GetFiles(schemaFolder, "*.json");
+if (schemaFiles.Length == 0)
+{
+    Console.WriteLine("No schema files found.");
+    Console.WriteLine("Please place schema json file inside Schemas folder.");
     return;
 }
+
+Console.WriteLine("Available Schema Files");
+Console.WriteLine("======================");
+
+
+for (int i = 0; i < schemaFiles.Length; i++)
+{
+    Console.WriteLine($"{i + 1}. {Path.GetFileName(schemaFiles[i])}");
+}
+
+Console.WriteLine();
+Console.Write("Select Schema Number: ");
+
+var selected = Console.ReadLine();
+
+if (!int.TryParse(selected, out int index))
+{
+    Console.WriteLine("Invalid selection");
+    return;
+}
+
+if (index < 1 || index > schemaFiles.Length)
+{
+    Console.WriteLine("Invalid selection");
+    return;
+}
+
+var schemaFile = schemaFiles[index - 1];
+
 var json = File.ReadAllText(schemaFile);
-var schema = JsonSerializer.Deserialize<TableSchema>(json);
+var schema = JsonSerializer.Deserialize<TableSchema>(
+    json,
+    new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true
+    });
 
 if (schema == null)
 {
     Console.WriteLine("Invalid JSON Schema");
     return;
 }
+
+Directory.Delete(outputDir, true);
+outputDir = Path.Combine(
+    rootPath,
+    "Output",
+    $"{schema.TableName}_{DateTime.Now:yyyyMMdd_HHmmss}"
+);
 
 var generatorSchema = JsonSerializer.Deserialize<GeneratorSchema>(json);
 
