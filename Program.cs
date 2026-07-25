@@ -71,6 +71,7 @@ var tmplDbTestScriptPath = Path.Combine(rootPath, templateDatabasePathSbn,"TestS
 var tmplProgramPath = Path.Combine(rootPath, templateBackendPathSbn, "Program.sbn");
 var tmplAppSettingsPath = Path.Combine(rootPath, templateBackendPathSbn, "AppSettings.sbn");
 var tmplLaunchSettingsPath = Path.Combine(rootPath, templateBackendPathSbn, "LaunchSettings.sbn");
+var tmplProjectPath = Path.Combine(rootPath, templateBackendPathSbn, "Project.sbn");
 
 //  Template path Angular
 var tmplAngularServicePath = Path.Combine(rootPath, "Templates", "angular-service.sbn");
@@ -211,6 +212,7 @@ var loginjwtcontrollerCode = GenerateCode(tmplLoginJwtControllerPath, templateMo
 var programCode = GenerateCode(tmplProgramPath, templateModel);
 var appSettingsCode = GenerateCode(tmplAppSettingsPath, templateModel);
 var launchSettingsCode = GenerateCode(tmplLaunchSettingsPath, templateModel);
+var projectCode = GenerateCode(tmplProjectPath,templateModel);
 
 var angularServiceCode = GenerateCode(tmplAngularServicePath, templateModel);
 
@@ -295,6 +297,8 @@ var appSettingsfilePath = Path.Combine(outputDir,$"appsettings.json");
 File.WriteAllText(appSettingsfilePath, appSettingsCode);
 var launchSettingsfilepath = Path.Combine(outputDir, $"launchSettings.json");
 File.WriteAllText(launchSettingsfilepath, launchSettingsCode);
+var projectfilePath = Path.Combine(outputDir, $"{generatorSchema.Settings.ProjectName}.csproj");
+File.WriteAllText(projectfilePath, projectCode);
 
 //Test angular file
 //var angularservicefilePath = Path.Combine(outputDir, $"{schema.TableName}Service.cs");

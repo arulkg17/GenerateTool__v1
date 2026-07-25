@@ -26,6 +26,7 @@ public class TableSchema
     public string Dbname { get; set; } = string.Empty;
     [JsonPropertyName("tables")]
     public List<TableSchema> Tables { get; set; } = new();
-
+    [JsonPropertyName("projectname")]
+    public string ProjectName { get; set; } = string.Empty;
 }
 

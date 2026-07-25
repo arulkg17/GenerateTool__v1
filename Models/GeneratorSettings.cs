@@ -5,6 +5,7 @@ namespace GeneratorTool.Models
 {
     public class GeneratorSettings
     {
+        [JsonPropertyName("projectname")]
         public string ProjectName { get; set; } = string.Empty;
         [JsonPropertyName("namespace")]
         public string Namespace { get; set; } = string.Empty;
@@ -58,6 +59,8 @@ namespace GeneratorTool.Models
 
         [JsonPropertyName("angularorigin")]
         public string AngularOrigin { get; set; } = string.Empty;
+        [JsonPropertyName("targetframework")]
+        public string Targetframework { get; set; } = string.Empty;
     
     }
 }
