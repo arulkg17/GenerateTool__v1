@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using GeneratorTool.Models;
+using GeneratorTool.Services;
 using Scriban;
 using System.Reflection.Metadata;
 using System.Text.Json;
@@ -87,41 +88,9 @@ if (!Directory.Exists(schemaFolder))
     Directory.CreateDirectory(schemaFolder);
 }
 
-var schemaFiles = Directory.GetFiles(schemaFolder, "*.json");
-if (schemaFiles.Length == 0)
-{
-    Console.WriteLine("No schema files found.");
-    Console.WriteLine("Please place schema json file inside Schemas folder.");
-    return;
-}
-
-Console.WriteLine("Available Schema Files");
-Console.WriteLine("======================");
-
-
-for (int i = 0; i < schemaFiles.Length; i++)
-{
-    Console.WriteLine($"{i + 1}. {Path.GetFileName(schemaFiles[i])}");
-}
-
-Console.WriteLine();
-Console.Write("Select Schema Number: ");
-
-var selected = Console.ReadLine();
-
-if (!int.TryParse(selected, out int index))
-{
-    Console.WriteLine("Invalid selection");
-    return;
-}
-
-if (index < 1 || index > schemaFiles.Length)
-{
-    Console.WriteLine("Invalid selection");
-    return;
-}
-
-var schemaFile = schemaFiles[index - 1];
+//Schema Selection Service
+var selector =  new SchemaSelectorService(schemaFolder);
+var schemaFile =  selector.SelectSchema();
 
 var json = File.ReadAllText(schemaFile);
 var schema = JsonSerializer.Deserialize<TableSchema>(

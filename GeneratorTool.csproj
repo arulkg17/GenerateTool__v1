@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="Templates\angular\" />
     <Folder Include="Templates\Backend\Models\" />
     <Folder Include="Templates\react\" />
