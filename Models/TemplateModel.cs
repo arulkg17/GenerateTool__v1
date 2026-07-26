@@ -91,5 +91,12 @@
                 x.Name != "UpdatedDate")
             .ToList();
 
+        public Column PrimaryKey =>
+            Columns.First(c => c.IsPrimary);
+
+        public IEnumerable<Column> NonIdentityColumns =>
+            Columns.Where(c => !c.IsIdentity);
+
+
     }
 }

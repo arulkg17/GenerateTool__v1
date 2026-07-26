@@ -28,5 +28,7 @@ public class TableSchema
     public List<TableSchema> Tables { get; set; } = new();
     [JsonPropertyName("projectname")]
     public string ProjectName { get; set; } = string.Empty;
+    [JsonPropertyName("paging")]
+    public PagingSettings Paging { get; set; } = new();
 }
 

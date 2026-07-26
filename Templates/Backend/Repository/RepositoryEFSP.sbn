@@ -1,0 +1,164 @@
+using {{settings.namespace}}.Contracts;
+using {{settings.namespace}}.Data;
+using {{settings.namespace}}.DTO;
+using {{settings.namespace}}.Entities;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
+
+namespace {{settings.namespace}}.Repositories;
+
+public class {{schema.tablename}}Repository : I{{schema.tablename}}Repository
+{
+    private readonly AppDbContext _dbContext;
+
+    public {{schema.tablename}}Repository(AppDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<int> AddAsync({{schema.entityname}} entity)
+    {
+        var result = await _dbContext.Database.ExecuteSqlRawAsync(
+            @"EXEC {{schema.storedprocedures.insert}}
+    {{~ for col in schema.columns ~}}
+    {{~ if !col.isidentity ~}}
+                @{{col.name}}{{ if !for.last }},{{ end }}
+    {{~ end ~}}
+    {{~ end ~}}"
+    {{~ for col in schema.columns ~}}
+    {{~ if !col.isidentity ~}}
+            , new SqlParameter("@{{col.name}}", (object?)entity.{{col.name}} ?? DBNull.Value)
+    {{~ end ~}}
+    {{~ end ~}}
+        );
+        return result;
+    }
+
+    public async Task<bool> UpdateAsync({{schema.entityname}} entity)
+    {
+        var affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(
+            @"EXEC {{schema.storedprocedures.update}}
+        {{~ for col in schema.columns ~}}                @{{col.name}},
+        {{~ end ~}}"
+        {{~ for col in schema.columns ~}}            , new SqlParameter("@{{col.name}}", (object?)entity.{{col.name}} ?? DBNull.Value)
+        {{~ end ~}}
+                );
+
+        return affectedRows > 0;
+    }
+
+    public async Task<{{schema.entityname}}?> GetByIdAsync(int id)
+    {
+        var result = await _dbContext.{{schema.dbsetname}}
+            .FromSqlRaw(
+                "EXEC {{schema.storedprocedures.getbyid}} @Id",
+                new SqlParameter("@Id", id))
+            .AsNoTracking()
+            .ToListAsync();
+
+        return result.FirstOrDefault();
+    }
+
+    public async Task<IEnumerable<{{schema.entityname}}>> GetAllAsync()
+    {
+        return await _dbContext.{{schema.dbsetname}}
+            .FromSqlRaw("EXEC {{schema.storedprocedures.getall}}")
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var affectedRows = await _dbContext.Database.ExecuteSqlRawAsync(
+            "EXEC {{schema.storedprocedures.delete}} @Id",
+            new SqlParameter("@Id", id));
+
+        return affectedRows > 0;
+    }
+
+    public async Task<PagedResultDto<{{schema.entityname}}> GetAllPagedAsync(
+    {{~ for col in schema.columns ~}}
+    {{~ if col.searchable ~}}
+            string? {{col.name | string.downcase}},
+    {{~ end ~}}
+    {{~ end ~}}
+        int pageNumber,
+        int pageSize)
+    {
+        using var connection = _dbContext.Database.GetDbConnection();
+
+        await connection.OpenAsync();
+
+        using var command = connection.CreateCommand();
+
+        command.CommandText =
+            "{{schema.storedprocedures.getallpaged}}";
+
+        command.CommandType = CommandType.StoredProcedure;
+
+        {{~ for col in schema.columns ~}}
+        {{~ if col.searchable ~}}
+                command.Parameters.Add(
+                    new SqlParameter(
+                        "@{{col.name}}",
+                        (object?){{col.name | string.downcase}} ?? DBNull.Value));
+        {{~ end ~}}
+        {{~ end ~}}
+
+        command.Parameters.Add(
+            new SqlParameter(
+                "@PageNumber",
+                pageNumber));
+
+        command.Parameters.Add(
+            new SqlParameter(
+                "@PageSize",
+                pageSize));
+
+        using var reader =
+            await command.ExecuteReaderAsync();
+
+        var items =
+            new List<{{schema.entityname}}>();
+
+        while(await reader.ReadAsync())
+        {
+            items.Add(new {{schema.entityname}}
+            {
+    {{~ for col in schema.columns ~}}
+    {{~ if !col.isidentity || col.isidentity ~}}
+                    {{col.name}} =
+    {{~ if col.type == "string" ~}}
+                        reader.IsDBNull(reader.GetOrdinal("{{col.name}}"))
+                        ? null
+                        : reader.GetString(reader.GetOrdinal("{{col.name}}")),
+    {{~ else if col.type == "number" ~}}
+                        reader.GetDecimal(reader.GetOrdinal("{{col.name}}")),
+    {{~ else if col.type == "boolean" ~}}
+                        reader.GetBoolean(reader.GetOrdinal("{{col.name}}")),
+    {{~ else if col.type == "datetime" ~}}
+                        reader.GetDateTime(reader.GetOrdinal("{{col.name}}")),
+    {{~ end ~}}
+    {{~ end ~}}
+    {{~ end ~}}
+            });
+        }
+
+
+        await reader.NextResultAsync();
+
+        int totalRecords = 0;
+
+        if(await reader.ReadAsync())
+        {
+            totalRecords = reader.GetInt32(0);
+        }
+
+        return new PagedResultDto<{{schema.entityname}}>
+        {
+            Data = items,
+            TotalRecords = totalRecords
+        };
+    }
+}

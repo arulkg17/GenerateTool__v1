@@ -96,7 +96,8 @@ var tmplBaseRepoPath = Path.Combine(rootPath, templateBackendPathSbn, "Repositor
 
 // Repository Interface and implementation 
 var tmplIRepoPath = Path.Combine(rootPath, templateBackendPathSbn, "Contracts", "IRepository.sbn");
-var tmplRepoPath = Path.Combine(rootPath, templateBackendPathSbn,"Repository", "RepositoryEF.sbn");
+var tmplRepoEFPath = Path.Combine(rootPath, templateBackendPathSbn,"Repository", "RepositoryEF.sbn");
+var tmplRepoEFSPPath = Path.Combine(rootPath, templateBackendPathSbn, "Repository", "RepositoryEFSP.sbn");
 
 // Service Interface and Implementation 
 var tmplIServicePath = Path.Combine(rootPath, templateBackendPathSbn, "Contracts", "IService.sbn");
@@ -217,7 +218,8 @@ try
     var baseRepoCode = templateRender.Render(tmplBaseRepoPath, templateModel);
 
     var irepoCode = templateRender.Render(tmplIRepoPath, templateModel);
-    var repoCode = templateRender.Render(tmplRepoPath, templateModel);
+    var repoEFCode = templateRender.Render(tmplRepoEFPath, templateModel);
+    var repoEFSPCode = templateRender.Render(tmplRepoEFSPPath, templateModel);
 
     var iserviceCode = templateRender.Render(tmplIServicePath, templateModel);
     var serviceCode = templateRender.Render(tmplServicePath, templateModel);
@@ -277,8 +279,11 @@ try
     var outputRepository = Path.Combine(outputDir, "Repositories");
     var baseRepofilePath = Path.Combine(outputRepository, $"BaseRepository.cs");
     generationResult.Files.Add(outputWriter.WriteFile(baseRepofilePath, baseRepoCode));
-    var repofilePath = Path.Combine(outputRepository, $"{schema.TableName}RepositoryEF.cs");
-    generationResult.Files.Add(outputWriter.WriteFile(repofilePath, repoCode));
+    var repoEFfilePath = Path.Combine(outputRepository, $"{schema.TableName}RepositoryEF.cs");
+    generationResult.Files.Add(outputWriter.WriteFile(repoEFfilePath, repoEFCode));
+    var repoEFSPfilePath = Path.Combine(outputRepository, $"{schema.TableName}RepositoryEFSP.cs");
+    generationResult.Files.Add(outputWriter.WriteFile(repoEFSPfilePath, repoEFSPCode));
+
     //Service
     var outputServices = Path.Combine(outputDir, "Services");
     var servicefilePath = Path.Combine(outputServices, $"{schema.TableName}ServiceEF.cs");
