@@ -1,0 +1,10 @@
+GeneratorTool
+Version 1.0.0
+
+Created by:
+Arul Kalivarathan
+
+Copyright © 2026
+
+This software is provided for educational use.
+Unauthorized commercial distribution is prohibited.

@@ -5,8 +5,37 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
+	  <AssemblyTitle>Maayai GeneratorTool</AssemblyTitle>
+	  
+	  <Description>
+		  .Net Core Full Stack Code Generator using Scriban Templates
+	  </Description>
 
+	  <Authors>
+		  Arull Kalivarathan
+	  </Authors>
+
+	  <Company>
+		  Maayai Industrial Tech Stack Training Center
+	  </Company>
+
+	  <Copyright>
+		  Copyright © 2026 Arul Kalivarathan
+	  </Copyright>
+
+	  <Version>
+		  1.0.0
+	  </Version>
+
+  </PropertyGroup>
+	
+  <ItemGroup>
+
+	<None Update="LICENSE.txt">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+ </ItemGroup>
+	
   <ItemGroup>
     <Compile Remove="Templates\Samples\SolutionUpdater.cs" />
   </ItemGroup>
@@ -20,6 +49,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
     <PackageReference Include="Scriban" Version="7.2.5" />
+    <PackageReference Include="Serilog" Version="4.4.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,11 @@
 ﻿using GeneratorTool.Services.Interfaces;
+using Serilog;
 
 namespace GeneratorTool.Services;
 
 public class SchemaSelectorService : ISchemaSelectorService
 {
     private readonly string _schemaFolder;
-
 
     public SchemaSelectorService(string schemaFolder)
     {
@@ -15,6 +15,9 @@ public class SchemaSelectorService : ISchemaSelectorService
 
     public string SelectSchema()
     {
+        Log.Information("Starting schema selection.");
+        Log.Information("Schema folder: {SchemaFolder}", _schemaFolder);
+
 
         var files = Directory.GetFiles(
             _schemaFolder,
@@ -23,6 +26,10 @@ public class SchemaSelectorService : ISchemaSelectorService
 
         if (files.Length == 0)
         {
+            Log.Error(
+                "No schema files found in folder: {SchemaFolder}",
+                _schemaFolder);
+
             throw new Exception(
               "No schema files found");
         }
@@ -30,6 +37,11 @@ public class SchemaSelectorService : ISchemaSelectorService
 
         Console.WriteLine(
             "Available Schema Files");
+
+
+        Log.Information(
+            "Found {Count} schema files.",
+            files.Length);
 
 
         for (int i = 0; i < files.Length; i++)
@@ -48,6 +60,10 @@ public class SchemaSelectorService : ISchemaSelectorService
 
         if (!int.TryParse(input, out int index))
         {
+            Log.Error(
+                "Invalid schema selection input: {Input}",
+                input);
+
             throw new Exception(
               "Invalid selection");
         }
@@ -55,9 +71,22 @@ public class SchemaSelectorService : ISchemaSelectorService
 
         if (index < 1 || index > files.Length)
         {
-           throw new Exception("Invalid selection");
+            Log.Error(
+                "Schema selection index {Index} is invalid. Available count: {Count}",
+                index,
+                files.Length);
+
+            throw new Exception("Invalid selection");
         }
 
-        return files[index - 1];
+
+        var selectedSchema = files[index - 1];
+
+        Log.Information(
+            "Schema selected successfully: {SchemaFile}",
+            selectedSchema);
+
+
+        return selectedSchema;
     }
 }
