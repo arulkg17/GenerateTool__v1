@@ -1,0 +1,177 @@
+{
+  "settings": {
+    "namespace": "InvoiceManagement",
+    "projectname": "InvoiceManagement.Api",
+    "targetframework": "net10.0",
+    "database": "InvoiceDb",
+    "provider": "SqlServer",
+    "apititle": "Invoice Management API V1",
+    "dbserver": "LAPTOP-BIG8QIRC\\SQL2025",
+    "dbname": "ArulTestInvoiceDb",
+    "angularorigin": "http://localhost:4200",
+    "jwtkey": "v2UJQxTrwUCqqJkehkxvSUZKQCX6gNmRWq7q1bWa3Jw=",
+    "jwtissuer": "yourapiissuer",
+    "jwtexpiryminutes": 60,
+    "adminusername": "admin",
+    "adminpassword": "password",
+    "port": 5031
+  },
+  "tables": [
+    { "name": "Book" }
+  ],
+  "tablename": "Book",
+  "entityname": "BookEntity",
+  "dbsetname": "Books",
+  "apiUrl": "/api/book",
+  "paging": {
+    "enabled": true,
+    "pageNumber": 1,
+    "pageSize": 10,
+    "searchEnabled": true
+  },
+  "testData": {
+    "enabled": true,
+    "recordCount": 5
+  },
+  "storedProcedures": {
+    "insert": "sp_Book_Insert",
+    "update": "sp_Book_Update",
+    "delete": "sp_Book_Delete",
+    "getById": "sp_Book_GetById",
+    "getAll": "sp_Book_GetAll",
+    "getAllPaged": "sp_Book_GetAllPaged"
+  },
+  "projectType": [
+    "WebApi",
+    "WinForms",
+    "Angular",
+    "React"
+  ],
+  "Columns": [
+    {
+      "name": "BookId",
+      "type": "number",
+      "sqlType": "INT",
+      "isPrimary": true,
+      "isIdentity": true,
+      "required": true
+    },
+    {
+      "name": "ISBN",
+      "type": "string",
+      "sqlType": "VARCHAR(20)",
+      "required": true,
+      "maxlength": 20,
+      "searchable": true,
+      "searchOperator": "Equals"
+    },
+    {
+      "name": "Title",
+      "type": "string",
+      "sqlType": "VARCHAR(150)",
+      "required": true,
+      "maxlength": 150,
+      "searchable": true,
+      "searchOperator": "Equals"
+    },
+    {
+      "name": "Author",
+      "type": "string",
+      "sqlType": "VARCHAR(100)",
+      "required": true,
+      "maxlength": 100,
+      "searchable": true,
+      "searchOperator": "Equals"
+    },
+    {
+      "name": "Publisher",
+      "type": "string",
+      "sqlType": "VARCHAR(100)",
+      "required": false,
+      "maxlength": 100
+    },
+    {
+      "name": "Genre",
+      "type": "string",
+      "sqlType": "VARCHAR(50)",
+      "required": true,
+      "maxlength": 50,
+      "searchable": true,
+      "searchOperator": "Equals"
+    },
+    {
+      "name": "Language",
+      "type": "string",
+      "sqlType": "VARCHAR(30)",
+      "required": false,
+      "maxlength": 30
+    },
+    {
+      "name": "Edition",
+      "type": "string",
+      "sqlType": "VARCHAR(20)",
+      "required": false,
+      "maxlength": 20
+    },
+    {
+      "name": "TotalCopies",
+      "type": "number",
+      "sqlType": "INT",
+      "required": true
+    },
+    {
+      "name": "AvailableCopies",
+      "type": "number",
+      "sqlType": "INT",
+      "required": true
+    },
+    {
+      "name": "Price",
+      "type": "number",
+      "sqlType": "DECIMAL(18,2)",
+      "required": false
+    },
+    {
+      "name": "ShelfLocation",
+      "type": "string",
+      "sqlType": "VARCHAR(30)",
+      "required": false,
+      "maxlength": 30
+    },
+    {
+      "name": "IsActive",
+      "type": "boolean",
+      "sqlType": "BIT",
+      "required": true,
+      "defaultValue": true
+    },
+    {
+      "name": "CreatedBy",
+      "type": "string",
+      "sqlType": "NVARCHAR(500)",
+      "required": true,
+      "defaultValue": "SYSTEM_USER"
+    },
+    {
+      "name": "CreatedDate",
+      "type": "datetime",
+      "sqlType": "DATETIME",
+      "required": false,
+      "defaultValue": "GETDATE()"
+    },
+    {
+      "name": "UpdatedBy",
+      "type": "string",
+      "sqlType": "NVARCHAR(500)",
+      "required": true,
+      "defaultValue": "SYSTEM_USER"
+    },
+    {
+      "name": "UpdatedDate",
+      "type": "datetime",
+      "sqlType": "DATETIME",
+      "required": false,
+      "defaultValue": "GETDATE()"
+    }
+  ]
+}

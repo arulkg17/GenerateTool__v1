@@ -28,7 +28,8 @@ Console.WriteLine("License : Educational Use");
 Console.WriteLine("========================================");
 Console.WriteLine();
 
-var rootPath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName;
+//var rootPath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName;
+var rootPath = AppContext.BaseDirectory; 
 
 //Logs related 
 var logFolder = Path.Combine(AppContext.BaseDirectory, "Logs");

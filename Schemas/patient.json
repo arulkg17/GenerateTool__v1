@@ -1,0 +1,177 @@
+{
+  "settings": {
+    "namespace": "InvoiceManagement",
+    "projectname": "InvoiceManagement.Api",
+    "targetframework": "net10.0",
+    "database": "InvoiceDb",
+    "provider": "SqlServer",
+    "apititle": "Invoice Management API V1",
+    "dbserver": "LAPTOP-BIG8QIRC\\SQL2025",
+    "dbname": "ArulTestInvoiceDb",
+    "angularorigin": "http://localhost:4200",
+    "jwtkey": "v2UJQxTrwUCqqJkehkxvSUZKQCX6gNmRWq7q1bWa3Jw=",
+    "jwtissuer": "yourapiissuer",
+    "jwtexpiryminutes": 60,
+    "adminusername": "admin",
+    "adminpassword": "password",
+    "port": 5031
+  },
+  "tables": [
+    { "name": "Patient" }
+  ],
+  "tablename": "Patient",
+  "entityname": "PatientEntity",
+  "dbsetname": "Patients",
+  "apiUrl": "/api/patient",
+  "paging": {
+    "enabled": true,
+    "pageNumber": 1,
+    "pageSize": 10,
+    "searchEnabled": true
+  },
+  "testData": {
+    "enabled": true,
+    "recordCount": 5
+  },
+  "storedProcedures": {
+    "insert": "sp_Patient_Insert",
+    "update": "sp_Patient_Update",
+    "delete": "sp_Patient_Delete",
+    "getById": "sp_Patient_GetById",
+    "getAll": "sp_Patient_GetAll",
+    "getAllPaged": "sp_Patient_GetAllPaged"
+  },
+  "projectType": [
+    "WebApi",
+    "WinForms",
+    "Angular",
+    "React"
+  ],
+  "Columns": [
+    {
+      "name": "PatientId",
+      "type": "number",
+      "sqlType": "INT",
+      "isPrimary": true,
+      "isIdentity": true,
+      "required": true
+    },
+    {
+      "name": "PatientCode",
+      "type": "string",
+      "sqlType": "VARCHAR(20)",
+      "required": true,
+      "maxlength": 20,
+      "searchable": true,
+      "searchOperator": "Equals"
+    },
+    {
+      "name": "FullName",
+      "type": "string",
+      "sqlType": "VARCHAR(100)",
+      "required": true,
+      "maxlength": 100,
+      "searchable": true,
+      "searchOperator": "Equals"
+    },
+    {
+      "name": "Gender",
+      "type": "string",
+      "sqlType": "VARCHAR(10)",
+      "required": true,
+      "maxlength": 10
+    },
+    {
+      "name": "DateOfBirth",
+      "type": "date",
+      "sqlType": "DATE",
+      "required": true
+    },
+    {
+      "name": "BloodGroup",
+      "type": "string",
+      "sqlType": "VARCHAR(5)",
+      "required": false,
+      "maxlength": 5
+    },
+    {
+      "name": "ContactNumber",
+      "type": "string",
+      "sqlType": "VARCHAR(20)",
+      "required": false,
+      "maxlength": 20
+    },
+    {
+      "name": "Address",
+      "type": "string",
+      "sqlType": "VARCHAR(250)",
+      "required": false,
+      "maxlength": 250
+    },
+    {
+      "name": "Department",
+      "type": "string",
+      "sqlType": "VARCHAR(50)",
+      "required": true,
+      "maxlength": 50,
+      "searchable": true,
+      "searchOperator": "Equals"
+    },
+    {
+      "name": "AdmissionDate",
+      "type": "date",
+      "sqlType": "DATE",
+      "required": true
+    },
+    {
+      "name": "DischargeDate",
+      "type": "date",
+      "sqlType": "DATE",
+      "required": false
+    },
+    {
+      "name": "DoctorAssigned",
+      "type": "string",
+      "sqlType": "VARCHAR(100)",
+      "required": false,
+      "maxlength": 100,
+      "searchable": true,
+      "searchOperator": "Equals"
+    },
+    {
+      "name": "IsActive",
+      "type": "boolean",
+      "sqlType": "BIT",
+      "required": true,
+      "defaultValue": true
+    },
+    {
+      "name": "CreatedBy",
+      "type": "string",
+      "sqlType": "NVARCHAR(500)",
+      "required": true,
+      "defaultValue": "SYSTEM_USER"
+    },
+    {
+      "name": "CreatedDate",
+      "type": "datetime",
+      "sqlType": "DATETIME",
+      "required": false,
+      "defaultValue": "GETDATE()"
+    },
+    {
+      "name": "UpdatedBy",
+      "type": "string",
+      "sqlType": "NVARCHAR(500)",
+      "required": true,
+      "defaultValue": "SYSTEM_USER"
+    },
+    {
+      "name": "UpdatedDate",
+      "type": "datetime",
+      "sqlType": "DATETIME",
+      "required": false,
+      "defaultValue": "GETDATE()"
+    }
+  ]
+}
